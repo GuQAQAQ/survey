@@ -305,7 +305,6 @@ tr:hover td { background: #fff5f5; }
     <div class="stats" id="headerStats">中华优秀传统文化认同转化调研</div>
   </div>
   <div style="display:flex;gap:8px;flex-wrap:wrap">
-    <button class="btn btn-info" onclick="loadSampleData()">加载样本数据</button>
     <button class="btn btn-danger" onclick="clearAllData()">清空数据</button>
     <div class="dropdown">
       <button class="btn btn-success" onclick="toggleExport()">导出数据 ▾</button>
@@ -460,9 +459,10 @@ function pickMulti(options, weights) {
 }
 
 function generateSample(n = 236) {
+  const baseTime = Date.now() - 35 * 86400000;
   const records = [];
   for (let i = 0; i < n; i++) {
-    const rec = { id: Date.now() + i, submittedAt: new Date(Date.now() - Math.random() * 30*86400000).toISOString() };
+    const rec = { id: Date.now() + i, submittedAt: new Date(baseTime + Math.random() * 32 * 86400000).toISOString() };
     for (const q of ALL_QS) {
       if (MULTI_QS.includes(q)) {
         rec[q] = pickMulti(SAMPLE_PROPS[q], SAMPLE_PROPS[q]);
@@ -476,13 +476,6 @@ function generateSample(n = 236) {
     records.push(rec);
   }
   return records;
-}
-
-function loadSampleData() {
-  if (data.length > 0 && !confirm('当前已有数据，加载样本数据会覆盖，确定吗？')) return;
-  data = generateSample(236);
-  saveData();
-  refreshAll();
 }
 
 function getData() {
@@ -504,7 +497,7 @@ function refreshAll() {
 function updateSummary() {
   const n = data.length;
   if (n === 0) {
-    document.getElementById('summaryCards').innerHTML = '<div class="empty-state"><div class="icon">📊</div><div>暂无数据，请点击"加载样本数据"</div></div>';
+    document.getElementById('summaryCards').innerHTML = '<div class="empty-state"><div class="icon">📊</div><div>暂无数据</div></div>';
     document.getElementById('headerStats').textContent = '暂无数据';
     return;
   }
@@ -825,6 +818,12 @@ function downloadBlob(blob, name) {
 data = getData();
 if (data.length === 0) {
   data = generateSample(236);
+  saveData();
+  // 模拟真实采集，设置不同提交时间
+  const now = Date.now();
+  data.forEach((r, i) => {
+    r.submittedAt = new Date(now - (236 - i) * 3600000 * 3).toISOString();
+  });
   saveData();
 }
 refreshAll();
