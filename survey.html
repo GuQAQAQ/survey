@@ -168,7 +168,9 @@ textarea:focus { outline: none; border-color: #c41e3a; }
   </div>
 
   <div class="form-card" id="formCard">
-    <form id="surveyForm">
+    <div id="loadingOverlay" style="text-align:center;padding:40px">连接中，请稍候…</div>
+
+    <form id="surveyForm" class="hidden">
       <!-- ============ 第一部分 ============ -->
       <div class="section" id="section1">
         <div class="section-title">第一部分：基本信息</div>
@@ -237,8 +239,8 @@ textarea:focus { outline: none; border-color: #c41e3a; }
           <div class="options" data-q="q6">
             <label class="option-label"><input type="radio" name="q6" value="能辨认3种及以上"><span>能辨认3种及以上</span></label>
             <label class="option-label"><input type="radio" name="q6" value="能辨认1-2种"><span>能辨认1-2种</span></label>
-            <label class="option-label"><input type="radio" name="q6" value="能分辨楷书"><span>只能分辨楷书</span></label>
-            <label class="option-label"><input type="radio" name="q6" value="完全不能"><span>完全不能辨认</span></label>
+            <label class="option-label"><input type="radio" name="q6" value="只能分辨楷书"><span>只能分辨楷书</span></label>
+            <label class="option-label"><input type="radio" name="q6" value="完全不能辨认"><span>完全不能辨认</span></label>
           </div>
         </div>
 
@@ -468,7 +470,19 @@ textarea:focus { outline: none; border-color: #c41e3a; }
   </div>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 <script>
+firebase.initializeApp({
+  apiKey: "AIzaSyDummy123456789",
+  authDomain: "your-project.firebaseapp.com",
+  projectId: "your-project-id",
+  storageBucket: "your-project.appspot.com",
+  messagingSenderId: "123456789",
+  appId: "1:123456789:web:abcdef"
+});
+const db = firebase.firestore();
+
 const sections = ['section1','section2','section3','section4','section5','section6'];
 const requiredQs = ['q1','q2','q3','q4','q7','q8','q9','q10','q11','q12','q15','q16','q17','q18','q19','q20','q21','q22'];
 let currentSection = 0;
@@ -493,15 +507,11 @@ function showSection(idx) {
 }
 
 function nextSection() {
-  if (currentSection < sections.length - 1) {
-    showSection(currentSection + 1);
-  }
+  if (currentSection < sections.length - 1) showSection(currentSection + 1);
 }
 
 function prevSection() {
-  if (currentSection > 0) {
-    showSection(currentSection - 1);
-  }
+  if (currentSection > 0) showSection(currentSection - 1);
 }
 
 function saveToLocal() {
@@ -524,13 +534,21 @@ function saveToLocal() {
   return data;
 }
 
-document.getElementById('surveyForm').addEventListener('submit', function(e) {
+// Check Firebase connection
+db.collection('responses').limit(1).get().then(() => {
+  document.getElementById('loadingOverlay').classList.add('hidden');
+  document.getElementById('surveyForm').classList.remove('hidden');
+}).catch(err => {
+  document.getElementById('loadingOverlay').textContent = '数据库连接失败，请检查 Firebase 配置：' + err.message;
+});
+
+document.getElementById('surveyForm').addEventListener('submit', async function(e) {
   e.preventDefault();
-  const data = saveToLocal();
+  const formData = saveToLocal();
 
   let allFilled = true;
   for (const q of requiredQs) {
-    if (!data[q] || (Array.isArray(data[q]) && data[q].length === 0)) {
+    if (!formData[q] || (Array.isArray(formData[q]) && formData[q].length === 0)) {
       allFilled = false;
       const el = document.querySelector(`[data-q="${q}"]`);
       if (el) {
@@ -550,17 +568,20 @@ document.getElementById('surveyForm').addEventListener('submit', function(e) {
     return;
   }
 
-  const existing = JSON.parse(localStorage.getItem('survey_responses') || '[]');
-  data.id = Date.now();
-  data.submittedAt = new Date().toISOString();
-  existing.push(data);
-  localStorage.setItem('survey_responses', JSON.stringify(existing));
+  const submitBtn = document.getElementById('submitBtn');
+  submitBtn.disabled = true;
+  submitBtn.textContent = '提交中…';
 
-  try { new BroadcastChannel('survey_sync').postMessage('data_updated'); } catch(e) {}
-
-  document.getElementById('surveyForm').classList.add('hidden');
-  document.getElementById('thankYou').classList.remove('hidden');
-  document.getElementById('dashLink').style.display = 'block';
+  try {
+    await db.collection('responses').add(formData);
+    document.getElementById('surveyForm').classList.add('hidden');
+    document.getElementById('thankYou').classList.remove('hidden');
+    document.getElementById('dashLink').style.display = 'block';
+  } catch (err) {
+    alert('提交失败，请重试：' + err.message);
+    submitBtn.disabled = false;
+    submitBtn.textContent = '提交问卷';
+  }
 });
 
 showSection(0);

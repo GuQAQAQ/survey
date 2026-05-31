@@ -25,7 +25,6 @@ body {
 .top-bar .stats { font-size: .85em; opacity: .8; }
 .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
 
-/* Cards */
 .card {
   background: #fff;
   border-radius: 12px;
@@ -45,7 +44,6 @@ body {
   align-items: center;
 }
 
-/* Summary Row */
 .summary-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -63,7 +61,6 @@ body {
 .stat-card .num { font-size: 2em; font-weight: 700; color: #1a1a2e; }
 .stat-card .label { font-size: .8em; color: #888; margin-top: 4px; }
 
-/* Tabs */
 .tabs {
   display: flex;
   gap: 4px;
@@ -84,7 +81,6 @@ body {
 .tab.active { background: #fff; color: #1a1a2e; box-shadow: 0 -2px 8px rgba(0,0,0,.06); }
 .tab:hover:not(.active) { background: #ddd5c8; }
 
-/* Charts */
 .charts-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -96,45 +92,12 @@ body {
   padding: 16px;
   box-shadow: 0 1px 6px rgba(0,0,0,.06);
 }
-.chart-box h4 {
-  font-size: .9em;
-  color: #333;
-  margin-bottom: 12px;
-  text-align: center;
-}
+.chart-box h4 { font-size: .9em; color: #333; margin-bottom: 12px; text-align: center; }
 .bar-chart { display: flex; flex-direction: column; gap: 6px; }
-.bar-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.bar-label {
-  width: 100px;
-  text-align: right;
-  font-size: .78em;
-  color: #666;
-  flex-shrink: 0;
-}
-.bar-track {
-  flex: 1;
-  height: 22px;
-  background: #f0ece4;
-  border-radius: 4px;
-  overflow: hidden;
-  position: relative;
-}
-.bar-fill {
-  height: 100%;
-  border-radius: 4px;
-  transition: width .6s ease;
-  display: flex;
-  align-items: center;
-  padding-left: 6px;
-  font-size: .7em;
-  color: #fff;
-  font-weight: 600;
-  min-width: fit-content;
-}
+.bar-row { display: flex; align-items: center; gap: 8px; }
+.bar-label { width: 100px; text-align: right; font-size: .78em; color: #666; flex-shrink: 0; }
+.bar-track { flex: 1; height: 22px; background: #f0ece4; border-radius: 4px; overflow: hidden; position: relative; }
+.bar-fill { height: 100%; border-radius: 4px; transition: width .6s ease; display: flex; align-items: center; padding-left: 6px; font-size: .7em; color: #fff; font-weight: 600; min-width: fit-content; }
 .bar-fill.red { background: #c41e3a; }
 .bar-fill.blue { background: #3a7bd5; }
 .bar-fill.green { background: #2e7d32; }
@@ -145,7 +108,6 @@ body {
 .bar-fill.pink { background: #c2185b; }
 .bar-pct { font-size: .75em; color: #888; width: 36px; text-align: left; }
 
-/* Table */
 .table-wrap { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; font-size: .82em; }
 th {
@@ -157,14 +119,7 @@ th {
   position: sticky;
   top: 0;
 }
-td {
-  padding: 8px;
-  border-bottom: 1px solid #eee;
-  max-width: 120px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+td { padding: 8px; border-bottom: 1px solid #eee; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 tr:hover td { background: #fff5f5; }
 .table-controls {
   display: flex;
@@ -174,13 +129,7 @@ tr:hover td { background: #fff5f5; }
   flex-wrap: wrap;
   gap: 8px;
 }
-.search-input {
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: .85em;
-  width: 200px;
-}
+.search-input { padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: .85em; width: 200px; }
 .btn {
   padding: 8px 16px;
   border: none;
@@ -204,7 +153,6 @@ tr:hover td { background: #fff5f5; }
 .btn-info { background: #3a7bd5; color: #fff; }
 .btn-info:hover { background: #2c5fa1; }
 
-/* Modal */
 .modal-overlay {
   display: none;
   position: fixed;
@@ -237,13 +185,7 @@ tr:hover td { background: #fff5f5; }
 }
 .modal .field textarea { height: 60px; resize: vertical; }
 .modal .btn-row { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
-.modal .field-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
 
-/* Export dropdown */
 .dropdown { position: relative; display: inline-block; }
 .dropdown-menu {
   display: none;
@@ -270,7 +212,6 @@ tr:hover td { background: #fff5f5; }
 .empty-state { text-align: center; padding: 60px 20px; color: #999; }
 .empty-state .icon { font-size: 48px; margin-bottom: 12px; }
 
-/* Pagination */
 .pagination {
   display: flex;
   justify-content: center;
@@ -289,29 +230,100 @@ tr:hover td { background: #fff5f5; }
 }
 .pagination button.active { background: #c41e3a; color: #fff; border-color: #c41e3a; }
 .pagination button:disabled { opacity: .4; cursor: not-allowed; }
+
+/* Login Screen */
+.login-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+.login-box {
+  background: #fff;
+  border-radius: 16px;
+  padding: 40px;
+  width: 380px;
+  max-width: 95%;
+  box-shadow: 0 8px 40px rgba(0,0,0,.3);
+  text-align: center;
+}
+.login-box h2 { color: #1a1a2e; margin-bottom: 8px; }
+.login-box .subtitle { color: #888; font-size: .85em; margin-bottom: 24px; }
+.login-box .field { margin-bottom: 16px; text-align: left; }
+.login-box .field label { display: block; font-size: .82em; color: #555; margin-bottom: 4px; font-weight: 600; }
+.login-box .field input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: .92em;
+  transition: border-color .2s;
+}
+.login-box .field input:focus { outline: none; border-color: #c41e3a; }
+.login-box .btn-login {
+  width: 100%;
+  padding: 12px;
+  background: #c41e3a;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s;
+}
+.login-box .btn-login:hover { background: #8b0000; }
+.login-box .error { color: #c41e3a; font-size: .82em; margin-top: 8px; }
+.login-box .loading { color: #888; font-size: .85em; margin-top: 8px; }
+.hidden { display: none !important; }
+
 @media (max-width: 768px) {
   .top-bar { padding: 12px 16px; }
   .container { padding: 12px; }
   .charts-grid { grid-template-columns: 1fr; }
   .bar-label { width: 70px; font-size: .7em; }
-  .modal .field-row { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 <body>
+<!-- Login Screen -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-box">
+    <h2>管理员登录</h2>
+    <p class="subtitle">问卷数据管理后台</p>
+    <div class="field">
+      <label>邮箱</label>
+      <input type="email" id="loginEmail" placeholder="admin@example.com" autocomplete="email">
+    </div>
+    <div class="field">
+      <label>密码</label>
+      <input type="password" id="loginPass" placeholder="请输入密码" autocomplete="current-password">
+    </div>
+    <button class="btn-login" id="loginBtn" onclick="handleLogin()">登录</button>
+    <div class="error" id="loginError"></div>
+    <div class="loading hidden" id="loginLoading">正在登录…</div>
+  </div>
+</div>
+
+<!-- Main App -->
+<div id="mainApp" class="hidden">
 <div class="top-bar">
   <div>
     <h1>问卷数据管理后台</h1>
     <div class="stats" id="headerStats">中华优秀传统文化认同转化调研</div>
   </div>
   <div style="display:flex;gap:8px;flex-wrap:wrap">
-    <button class="btn btn-danger" onclick="clearAllData()">清空数据</button>
+    <button class="btn btn-info" onclick="loadFromFirebase()">从云端刷新</button>
+    <button class="btn btn-secondary" onclick="handleLogout()">退出登录</button>
     <div class="dropdown">
       <button class="btn btn-success" onclick="toggleExport()">导出数据 ▾</button>
       <div class="dropdown-menu" id="exportMenu">
         <a onclick="exportCSV()">导出为 CSV</a>
         <a onclick="exportJSON()">导出为 JSON</a>
-        <a onclick="exportExcel()">导出为 Excel (HTML)</a>
+        <a onclick="exportExcel()">导出为 Excel</a>
       </div>
     </div>
   </div>
@@ -338,7 +350,7 @@ tr:hover td { background: #fff5f5; }
       <div class="table-controls">
         <div style="display:flex;gap:8px">
           <input class="search-input" id="searchInput" placeholder="搜索内容…" oninput="renderTable()">
-          <button class="btn btn-info" onclick="refreshData()" title="从本地存储重新加载数据">刷新</button>
+          <button class="btn btn-info" onclick="loadFromFirebase()">从云端同步</button>
         </div>
         <span style="font-size:.8em;color:#888" id="recordCount"></span>
       </div>
@@ -359,6 +371,7 @@ tr:hover td { background: #fff5f5; }
     </div>
   </div>
 </div>
+</div>
 
 <!-- Edit/Add Modal -->
 <div class="modal-overlay" id="modalOverlay">
@@ -372,7 +385,30 @@ tr:hover td { background: #fff5f5; }
   </div>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 <script>
+// ===== Firebase 配置（请替换为你自己的项目配置） =====
+firebase.initializeApp({
+  apiKey: "AIzaSyDummy123456789",
+  authDomain: "your-project.firebaseapp.com",
+  projectId: "your-project-id",
+  storageBucket: "your-project.appspot.com",
+  messagingSenderId: "123456789",
+  appId: "1:123456789:web:abcdef"
+});
+const db = firebase.firestore();
+let data = [];
+let currentTab = 'stats';
+let currentPage = 1;
+const PAGE_SIZE = 20;
+let editId = null;
+let editDocId = null;
+let sortField = '';
+let sortDir = 'asc';
+const DISPLAY_QS = ['q1','q2','q3','q4','q8','q11','q12','q22'];
+
 const Q_LABELS = {
   q1: '性别', q2: '年级', q3: '专业',
   q4: '了解程度', q5: '了解领域', q6: '字体辨认', q7: '古典文学阅读',
@@ -404,170 +440,88 @@ const Q_VALUES = {
 
 const MULTI_QS = ['q5','q13','q14','q20','q21'];
 const ALL_QS = ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11','q12','q13','q14','q15','q16','q17','q18','q19','q20','q21','q22'];
+const COLORS = ['red','blue','green','orange','purple','teal','brown','pink'];
 
-// Proportional sample data generator
-const SAMPLE_PROPS = {
-  q1: { '男':0.669, '女':0.331 },
-  q2: { '大一':0.305, '大二':0.288, '大三':0.229, '大四':0.178 },
-  q3: { '理工类':0.415, '文史类':0.305, '艺术类':0.28 },
-  q4: { '非常了解':0.076, '比较了解':0.263, '一般':0.407, '不太了解':0.195, '完全不了解':0.059 },
-  q6: { '能辨认3种及以上':0.119, '能辨认1-2种':0.36, '只能分辨楷书':0.305, '完全不能辨认':0.216 },
-  q7: { '读过3部及以上':0.153, '读过1-2部':0.415, '只读过改编版':0.305, '完全没读过':0.127 },
-  q8: { '非常感兴趣':0.432, '比较感兴趣':0.432, '一般':0.106, '不太感兴趣':0.021, '完全不感兴趣':0.009 },
-  q9: { '非常有帮助':0.458, '比较有帮助':0.364, '一般':0.131, '帮助不大':0.034, '没有帮助':0.013 },
-  q10: { '非常希望':0.398, '比较希望':0.398, '一般':0.153, '不太希望':0.034, '完全不愿':0.017 },
-  q11: { '5-非常认同':0.407, '4-比较认同':0.373, '3-一般':0.161, '2-不太认同':0.042, '1-非常不认同':0.017 },
-  q12: { '经常参加':0.182, '偶尔参加':0.377, '很少参加':0.305, '从不参加':0.136 },
-  q15: { '经常使用':0.148, '偶尔使用':0.347, '很少使用':0.305, '从不使用':0.199 },
-  q16: { '非常满意':0.093, '比较满意':0.229, '一般':0.415, '不太满意':0.178, '非常不满意':0.085 },
-  q17: { '非常满意':0.119, '比较满意':0.237, '一般':0.381, '不太满意':0.186, '非常不满意':0.076 },
-  q18: { '非常满意':0.076, '比较满意':0.212, '一般':0.39, '不太满意':0.212, '非常不满意':0.11 },
-  q19: { '非常满意':0.085, '比较满意':0.258, '一般':0.403, '不太满意':0.178, '非常不满意':0.076 },
-  q22: { '非常愿意':0.288, '比较愿意':0.415, '看活动内容':0.22, '不太愿意':0.051, '完全不愿':0.025 },
-  q5: { '传统节日':0.784, '传统饮食':0.653, '古典文学':0.475, '传统科技':0.424, '书法绘画':0.352, '传统思想':0.318, '传统音乐':0.263, '传统手工艺':0.22, '传统戏曲':0.186 },
-  q13: { '传统节日活动':0.657, '文化讲座':0.386, '传统文化课程':0.343, '汉服活动':0.28, '书法绘画':0.254, '传统手工艺':0.225, '文化实践':0.157, '传统戏曲':0.123, '都没参加过':0.11 },
-  q14: { '个人兴趣':0.458, '学校组织':0.525, '综测加分':0.386, '同学邀请':0.314, '打发时间':0.22, '其他':0.085 },
-  q20: { '体验类':0.729, '实践类':0.585, '竞赛类':0.411, '讲座类':0.339, '线上类':0.305, '展示类':0.284, '演出类':0.258 },
-  q21: { '学业忙碌':0.682, '形式单一':0.555, '宣传不足':0.487, '距离远':0.424, '缺少同伴':0.352, '门槛高':0.288, '不实用':0.225, '其他':0.102 }
-};
-
-let data = [];
-let currentTab = 'stats';
-let currentPage = 1;
-const PAGE_SIZE = 20;
-let editId = null;
-let sortField = '';
-let sortDir = 'asc';
-const DISPLAY_QS = ['q1','q2','q3','q4','q8','q11','q12','q22'];
-
-function weightedPick(options, weights) {
-  const keys = Object.keys(options);
-  const vals = Object.values(options);
-  const r = Math.random();
-  let cum = 0;
-  for (let i = 0; i < keys.length; i++) {
-    cum += vals[i];
-    if (r < cum) return keys[i];
-  }
-  return keys[keys.length-1];
-}
-
-function pickMulti(options, weights) {
-  const result = [];
-  for (const [k, w] of Object.entries(weights)) {
-    if (Math.random() < w) result.push(k);
-  }
-  if (result.length === 0) {
-    const keys = Object.keys(weights);
-    result.push(keys[Math.floor(Math.random() * keys.length)]);
-  }
-  return result;
-}
-
-function generateSample(n = 236) {
-  const baseTime = Date.now() - 35 * 86400000;
-  const records = [];
-  for (let i = 0; i < n; i++) {
-    const rec = { id: Date.now() + i, submittedAt: new Date(baseTime + Math.random() * 32 * 86400000).toISOString() };
-    for (const q of ALL_QS) {
-      if (MULTI_QS.includes(q)) {
-        rec[q] = pickMulti(SAMPLE_PROPS[q], SAMPLE_PROPS[q]);
-      } else if (SAMPLE_PROPS[q]) {
-        rec[q] = weightedPick(SAMPLE_PROPS[q], SAMPLE_PROPS[q]);
-      } else {
-        rec[q] = '';
-      }
-    }
-    rec.q23 = Math.random() < 0.3 ? '希望学校多举办传统文化活动' : '';
-    records.push(rec);
-  }
-  return records;
-}
-
-function getData() {
-  try { return JSON.parse(localStorage.getItem('survey_responses') || '[]'); }
-  catch(e) { return []; }
-}
-
-function saveData() {
-  localStorage.setItem('survey_responses', JSON.stringify(data));
-}
-
-function syncFromStorage() {
-  const stored = getData();
-  if (stored.length > 0 && stored.length !== data.length) {
-    data = stored;
-    return true;
-  }
-  return false;
-}
-
-function refreshData() {
-  if (syncFromStorage()) {
-    saveData();
-    refreshAll();
-    return true;
-  }
-  return false;
-}
-
-// Auto-sync: listen for storage changes from other tabs
-window.addEventListener('storage', function(e) {
-  if (e.key === 'survey_responses') {
-    refreshData();
+// ===== Firebase Auth =====
+firebase.auth().onAuthStateChanged(user => {
+  if (user) {
+    document.getElementById('loginOverlay').classList.add('hidden');
+    document.getElementById('mainApp').classList.remove('hidden');
+    loadFromFirebase();
+  } else {
+    document.getElementById('loginOverlay').classList.remove('hidden');
+    document.getElementById('mainApp').classList.add('hidden');
   }
 });
 
-// Also poll for file:// protocol where storage events don't fire
-let lastLen = 0;
-setInterval(function() {
-  const cur = getData();
-  if (cur.length !== lastLen) {
-    lastLen = cur.length;
-    if (cur.length !== data.length) {
-      data = cur;
-      refreshAll();
-    }
+document.getElementById('loginPass').addEventListener('keydown', e => {
+  if (e.key === 'Enter') handleLogin();
+});
+
+async function handleLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  const errorEl = document.getElementById('loginError');
+  const loadingEl = document.getElementById('loginLoading');
+  const btn = document.getElementById('loginBtn');
+
+  if (!email || !pass) {
+    errorEl.textContent = '请输入邮箱和密码';
+    return;
   }
-}, 2000);
 
-// BroadcastChannel for cross-tab sync on same origin
-try {
-  const bc = new BroadcastChannel('survey_sync');
-  bc.onmessage = function(e) {
-    if (e.data === 'data_updated') refreshData();
-  };
-  // Notify other tabs when data changes
-  const origSave = saveData;
-  saveData = function() {
-    localStorage.setItem('survey_responses', JSON.stringify(data));
-    try { bc.postMessage('data_updated'); } catch(e) {}
-  };
-} catch(e) {}
+  errorEl.textContent = '';
+  btn.disabled = true;
+  loadingEl.classList.remove('hidden');
 
-function sortData(arr, field, dir) {
-  return [...arr].sort((a, b) => {
-    let va = a[field], vb = b[field];
-    if (Array.isArray(va)) va = va.join('; ');
-    if (Array.isArray(vb)) vb = vb.join('; ');
-    va = (va || '').toString();
-    vb = (vb || '').toString();
-    const cmp = va.localeCompare(vb, 'zh-CN');
-    return dir === 'asc' ? cmp : -cmp;
-  });
+  try {
+    await firebase.auth().signInWithEmailAndPassword(email, pass);
+  } catch (err) {
+    errorEl.textContent = err.message === 'The password is invalid or the user does not have a password.'
+      ? '密码错误'
+      : err.message === 'There is no user record corresponding to this identifier. We may have shared information about this request with third parties. Please try again in a few minutes.'
+      ? '账户不存在，请检查邮箱'
+      : err.message;
+    btn.disabled = false;
+    loadingEl.classList.add('hidden');
+  }
 }
 
-function toggleSort(field) {
-  if (sortField === field) {
-    sortDir = sortDir === 'asc' ? 'desc' : 'asc';
-  } else {
-    sortField = field;
-    sortDir = 'asc';
-  }
-  currentPage = 1;
-  renderTable();
+function handleLogout() {
+  firebase.auth().signOut();
 }
 
+// ===== Firebase Data =====
+async function loadFromFirebase() {
+  document.getElementById('headerStats').textContent = '正在加载…';
+  try {
+    const snapshot = await db.collection('responses').orderBy('submittedAt', 'desc').get();
+    data = [];
+    snapshot.forEach(doc => {
+      const d = doc.data();
+      d._docId = doc.id;
+      data.push(d);
+    });
+    refreshAll();
+  } catch (err) {
+    alert('加载数据失败：' + err.message);
+  }
+}
+
+async function saveToFirebase(docId, obj) {
+  await db.collection('responses').doc(docId).set(obj, { merge: true });
+}
+
+async function addToFirebase(obj) {
+  const ref = await db.collection('responses').add(obj);
+  return ref.id;
+}
+
+async function deleteFromFirebase(docId) {
+  await db.collection('responses').doc(docId).delete();
+}
+
+// ===== UI Functions =====
 function refreshAll() {
   updateSummary();
   if (currentTab === 'stats') renderCharts();
@@ -577,32 +531,22 @@ function refreshAll() {
 
 function updateSummary() {
   const n = data.length;
-  if (n === 0) {
-    document.getElementById('summaryCards').innerHTML = '<div class="empty-state"><div class="icon">📊</div><div>暂无数据</div></div>';
-    document.getElementById('headerStats').textContent = '暂无数据';
-    return;
-  }
   document.getElementById('headerStats').textContent = `共 ${n} 条记录`;
 
-  const q2count = {};
-  const q8count = {};
-  const q12count = {};
-  data.forEach(r => {
-    q2count[r.q2] = (q2count[r.q2] || 0) + 1;
-    q8count[r.q8] = (q8count[r.q8] || 0) + 1;
-    q12count[r.q12] = (q12count[r.q12] || 0) + 1;
-  });
+  if (n === 0) {
+    document.getElementById('summaryCards').innerHTML = '<div class="empty-state"><div class="icon">📊</div><div>暂无数据</div></div>';
+    return;
+  }
 
-  const getTop = (obj) => Object.entries(obj).sort((a,b) => b[1]-a[1])[0];
-  const topGrade = getTop(q2count) || ['-',0];
-  const topInterest = getTop(q8count) || ['-',0];
-  const topFreq = getTop(q12count) || ['-',0];
+  const interest = data.filter(r => ['非常感兴趣','比较感兴趣'].includes(r.q8)).length;
+  const willing = data.filter(r => ['非常愿意','比较愿意'].includes(r.q22)).length;
+  const frequent = data.filter(r => r.q12 === '经常参加').length;
 
   document.getElementById('summaryCards').innerHTML = `
     <div class="stat-card"><div class="num">${n}</div><div class="label">总答卷数</div></div>
-    <div class="stat-card"><div class="num">${(topInterest[1]/n*100).toFixed(0)}%</div><div class="label">对传统文化感兴趣</div></div>
-    <div class="stat-card"><div class="num">${(data.filter(r=>['非常愿意','比较愿意'].includes(r.q22)).length/n*100).toFixed(0)}%</div><div class="label">愿意参加活动</div></div>
-    <div class="stat-card"><div class="num">${(data.filter(r=>r.q12==='经常参加').length/n*100).toFixed(0)}%</div><div class="label">经常参与活动</div></div>
+    <div class="stat-card"><div class="num">${(interest/n*100).toFixed(0)}%</div><div class="label">对传统文化感兴趣</div></div>
+    <div class="stat-card"><div class="num">${(willing/n*100).toFixed(0)}%</div><div class="label">愿意参加活动</div></div>
+    <div class="stat-card"><div class="num">${(frequent/n*100).toFixed(0)}%</div><div class="label">经常参与活动</div></div>
   `;
 }
 
@@ -613,7 +557,6 @@ function renderCharts() {
   }
   const n = data.length;
   const SINGLE_QS = ['q1','q2','q3','q4','q6','q7','q8','q9','q10','q11','q12','q15','q16','q17','q18','q19','q22'];
-  const COLORS = ['red','blue','green','orange','purple','teal','brown','pink'];
   let html = '';
   for (const q of SINGLE_QS) {
     const count = {};
@@ -625,7 +568,6 @@ function renderCharts() {
     }).join('');
     html += `<div class="chart-box"><h4>${Q_LABELS[q]||q}</h4><div class="bar-chart">${bars}</div></div>`;
   }
-  // Multi-select Qs
   for (const q of MULTI_QS) {
     const count = {};
     data.forEach(r => {
@@ -642,18 +584,30 @@ function renderCharts() {
   document.getElementById('chartsContainer').innerHTML = html;
 }
 
+function sortData(arr, field, dir) {
+  return [...arr].sort((a, b) => {
+    let va = a[field], vb = b[field];
+    if (Array.isArray(va)) va = va.join('; ');
+    if (Array.isArray(vb)) vb = vb.join('; ');
+    va = (va || '').toString();
+    vb = (vb || '').toString();
+    return dir === 'asc' ? va.localeCompare(vb, 'zh-CN') : vb.localeCompare(va, 'zh-CN');
+  });
+}
+
+function toggleSort(field) {
+  if (sortField === field) { sortDir = sortDir === 'asc' ? 'desc' : 'asc'; }
+  else { sortField = field; sortDir = 'asc'; }
+  currentPage = 1;
+  renderTable();
+}
+
 function renderTable() {
   const search = document.getElementById('searchInput').value.toLowerCase();
   let filtered = data;
-  if (search) {
-    filtered = data.filter(r => JSON.stringify(r).toLowerCase().includes(search));
-  }
+  if (search) filtered = data.filter(r => JSON.stringify(r).toLowerCase().includes(search));
   document.getElementById('recordCount').textContent = `共 ${filtered.length} 条`;
-
-  if (sortField) {
-    filtered = sortData(filtered, sortField, sortDir);
-  }
-
+  if (sortField) filtered = sortData(filtered, sortField, sortDir);
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
   if (currentPage > totalPages) currentPage = 1;
   const start = (currentPage - 1) * PAGE_SIZE;
@@ -662,9 +616,8 @@ function renderTable() {
   let thead = '<tr>';
   const allCols = [{key:'id',label:'ID'}, ...DISPLAY_QS.map(q => ({key:q,label:Q_LABELS[q]})), {key:'submittedAt',label:'提交时间'}, {key:'_ops',label:'操作'}];
   allCols.forEach(col => {
-    if (col.key === '_ops') {
-      thead += `<th style="text-align:right">${col.label}</th>`;
-    } else {
+    if (col.key === '_ops') { thead += `<th style="text-align:right">${col.label}</th>`; }
+    else {
       const active = sortField === col.key;
       const arrow = active ? (sortDir === 'asc' ? ' ▲' : ' ▼') : '';
       thead += `<th onclick="toggleSort('${col.key}')" style="cursor:pointer;user-select:none">${col.label}${arrow}</th>`;
@@ -675,14 +628,14 @@ function renderTable() {
 
   let tbody = '';
   page.forEach(r => {
-    let row = `<td>${String(r.id).slice(-6)}</td>`;
+    let row = `<td>${String(r.id || r._docId || '').slice(-6)}</td>`;
     DISPLAY_QS.forEach(q => {
       let val = r[q];
       if (Array.isArray(val)) val = val.join('; ');
       row += `<td title="${(val||'').replace(/"/g,'&quot;')}">${val||'-'}</td>`;
     });
     row += `<td>${r.submittedAt ? new Date(r.submittedAt).toLocaleDateString() : '-'}</td>`;
-    row += `<td style="text-align:right"><button class="btn btn-sm btn-warning" onclick="openEditModal(${r.id})">编辑</button> <button class="btn btn-sm btn-danger" onclick="deleteRecord(${r.id})">删除</button></td>`;
+    row += `<td style="text-align:right"><button class="btn btn-sm btn-warning" onclick="openEditModal('${r._docId}')">编辑</button> <button class="btn btn-sm btn-danger" onclick="deleteRecord('${r._docId}')">删除</button></td>`;
     tbody += `<tr>${row}</tr>`;
   });
   document.getElementById('tableBody').innerHTML = tbody;
@@ -701,27 +654,30 @@ function renderTable() {
 
 function goPage(p) { currentPage = p; renderTable(); }
 
-function deleteRecord(id) {
+async function deleteRecord(docId) {
   if (!confirm('确定删除该记录吗？')) return;
-  data = data.filter(r => r.id !== id);
-  saveData();
-  refreshAll();
+  try {
+    await deleteFromFirebase(docId);
+    data = data.filter(r => r._docId !== docId);
+    refreshAll();
+  } catch (err) {
+    alert('删除失败：' + err.message);
+  }
 }
 
-function openEditModal(id) {
-  editId = id;
-  const rec = data.find(r => r.id === id);
+function openEditModal(docId) {
+  const rec = data.find(r => r._docId === docId);
   if (!rec) return;
-  document.getElementById('modalTitle').textContent = `编辑记录 #${String(id).slice(-6)}`;
+  editDocId = docId;
+  document.getElementById('modalTitle').textContent = `编辑记录`;
   buildModalForm(rec);
   document.getElementById('modalOverlay').classList.add('open');
 }
 
 function openAddModal() {
-  editId = null;
+  editDocId = null;
   document.getElementById('modalTitle').textContent = '新增记录';
-  const empty = { id: Date.now() };
-  buildModalForm(empty);
+  buildModalForm({});
   document.getElementById('modalOverlay').classList.add('open');
 }
 
@@ -754,7 +710,7 @@ function buildModalForm(rec) {
   document.getElementById('modalBody').innerHTML = html;
 }
 
-function saveModal() {
+async function saveModal() {
   const formData = {};
   const form = document.getElementById('modalBody');
   ALL_QS.forEach(q => {
@@ -768,49 +724,43 @@ function saveModal() {
   });
   formData.q23 = form.querySelector('[name="q23"]')?.value || '';
 
-  if (editId) {
-    const idx = data.findIndex(r => r.id === editId);
-    if (idx >= 0) {
-      data[idx] = { ...data[idx], ...formData };
+  try {
+    if (editDocId) {
+      await saveToFirebase(editDocId, formData);
+      const idx = data.findIndex(r => r._docId === editDocId);
+      if (idx >= 0) Object.assign(data[idx], formData);
+    } else {
+      formData.submittedAt = new Date().toISOString();
+      const newId = await addToFirebase(formData);
+      formData._docId = newId;
+      data.unshift(formData);
     }
-  } else {
-    formData.id = Date.now();
-    formData.submittedAt = new Date().toISOString();
-    data.push(formData);
+    closeModal();
+    refreshAll();
+  } catch (err) {
+    alert('保存失败：' + err.message);
   }
-  saveData();
-  closeModal();
-  refreshAll();
 }
 
 function closeModal() {
   document.getElementById('modalOverlay').classList.remove('open');
-  editId = null;
+  editDocId = null;
 }
-
-// Click overlay to close
 document.getElementById('modalOverlay').addEventListener('click', function(e) {
   if (e.target === this) closeModal();
 });
 
 function switchTab(tab) {
   currentTab = tab;
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll(`.tab`).forEach(t => { if (t.textContent.includes({'stats':'数据统计','records':'数据明细','compare':'交叉分析'}[tab])) t.classList.add('active'); });
-  document.getElementById('tabStats').style.display = tab === 'stats' ? 'block' : 'none';
-  document.getElementById('tabRecords').style.display = tab === 'records' ? 'block' : 'none';
-  document.getElementById('tabCompare').style.display = tab === 'compare' ? 'block' : 'none';
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    t.classList.toggle('active', (['stats','records','compare'][i]) === tab);
+  });
+  ['tabStats','tabRecords','tabCompare'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
+  document.getElementById({stats:'tabStats',records:'tabRecords',compare:'tabCompare'}[tab]).style.display = 'block';
   refreshAll();
 }
-
-// Fix tab switching
-document.querySelector('.tabs').addEventListener('click', function(e) {
-  if (e.target.classList.contains('tab')) {
-    const text = e.target.textContent;
-    const map = { '数据统计':'stats', '数据明细':'records', '交叉分析':'compare' };
-    switchTab(map[text] || 'stats');
-  }
-});
 
 function renderCrossTab() {
   if (data.length === 0) {
@@ -824,47 +774,29 @@ function renderCrossTab() {
   data.forEach(r => {
     if (matrix[r.q2] && matrix[r.q2][r.q4] !== undefined) matrix[r.q2][r.q4]++;
   });
-
-  let html = `<div style="overflow-x:auto"><table><thead><tr><th>年级 \\ 了解程度</th>`;
+  let html = '<div style="overflow-x:auto"><table><thead><tr><th>年级 \\ 了解程度</th>';
   levels.forEach(l => { html += `<th>${l}</th>`; });
-  html += `<th>合计</th></tr></thead><tbody>`;
+  html += '<th>合计</th></tr></thead><tbody>';
   grades.forEach(g => {
     html += `<tr><td style="font-weight:600">${g}</td>`;
     let total = 0;
-    levels.forEach(l => {
-      const v = matrix[g][l] || 0;
-      total += v;
-      html += `<td>${v}</td>`;
-    });
+    levels.forEach(l => { const v = matrix[g][l]||0; total += v; html += `<td>${v}</td>`; });
     html += `<td>${total}</td></tr>`;
   });
   html += '</tbody></table></div>';
   document.getElementById('crossTabResult').innerHTML = html;
 }
 
-function clearAllData() {
-  if (!confirm('确定清空所有数据吗？此操作不可撤销！')) return;
-  data = [];
-  saveData();
-  refreshAll();
-}
-
-function toggleExport() {
-  document.getElementById('exportMenu').classList.toggle('show');
-}
-document.addEventListener('click', function(e) {
-  if (!e.target.closest('.dropdown')) {
-    document.getElementById('exportMenu').classList.remove('show');
-  }
-});
+function toggleExport() { document.getElementById('exportMenu').classList.toggle('show'); }
+document.addEventListener('click', e => { if (!e.target.closest('.dropdown')) document.getElementById('exportMenu').classList.remove('show'); });
 
 function exportJSON() {
-  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
-  downloadBlob(blob, 'survey_data.json');
+  const exportData = data.map(({_docId, ...rest}) => rest);
+  downloadBlob(new Blob([JSON.stringify(exportData, null, 2)], {type:'application/json'}), 'survey_data.json');
 }
 
 function exportCSV() {
-  const headers = ['id','submittedAt',...ALL_QS,'q23'];
+  const headers = ['submittedAt',...ALL_QS,'q23'];
   const lines = [headers.join(',')];
   data.forEach(r => {
     const row = headers.map(h => {
@@ -874,28 +806,24 @@ function exportCSV() {
     });
     lines.push(row.join(','));
   });
-  const bom = '\uFEFF';
-  const blob = new Blob([bom + lines.join('\n')], {type:'text/csv;charset=utf-8'});
-  downloadBlob(blob, 'survey_data.csv');
+  downloadBlob(new Blob(['\uFEFF' + lines.join('\n')], {type:'text/csv;charset=utf-8'}), 'survey_data.csv');
 }
 
 function exportExcel() {
-  const headers = ['ID','提交时间',...ALL_QS.map(q => Q_LABELS[q]||q),'建议'];
+  const headers = ['提交时间',...ALL_QS.map(q => Q_LABELS[q]||q),'建议'];
   let html = '<table><tr>'+headers.map(h => `<th>${h}</th>`).join('')+'</tr>';
   data.forEach(r => {
     html += '<tr>';
-    html += `<td>${r.id}</td><td>${r.submittedAt||''}</td>`;
+    html += `<td>${r.submittedAt||''}</td>`;
     ALL_QS.forEach(q => {
       let v = r[q];
       if (Array.isArray(v)) v = v.join('; ');
       html += `<td>${v||''}</td>`;
     });
-    html += `<td>${(r.q23||'')}</td>`;
-    html += '</tr>';
+    html += `<td>${(r.q23||'')}</td></tr>`;
   });
   html += '</table>';
-  const blob = new Blob([html], {type:'application/vnd.ms-excel;charset=utf-8'});
-  downloadBlob(blob, 'survey_data.xls');
+  downloadBlob(new Blob([html], {type:'application/vnd.ms-excel;charset=utf-8'}), 'survey_data.xls');
 }
 
 function downloadBlob(blob, name) {
@@ -905,20 +833,6 @@ function downloadBlob(blob, name) {
   a.click();
   URL.revokeObjectURL(a.href);
 }
-
-// Init
-data = getData();
-if (data.length === 0) {
-  data = generateSample(236);
-  saveData();
-  // 模拟真实采集，设置不同提交时间
-  const now = Date.now();
-  data.forEach((r, i) => {
-    r.submittedAt = new Date(now - (236 - i) * 3600000 * 3).toISOString();
-  });
-  saveData();
-}
-refreshAll();
 </script>
 </body>
 </html>
