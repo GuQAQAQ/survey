@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>问卷数据管理后台</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, "Microsoft YaHei", "PingFang SC", sans-serif;
+  background: #f5f0e8;
+  min-height: 100vh;
+}
+.top-bar {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  color: #fff;
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.top-bar h1 { font-size: 1.2em; }
+.top-bar .stats { font-size: .85em; opacity: .8; }
+.container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+
+/* Cards */
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.08);
+  margin-bottom: 20px;
+}
+.card-title {
+  font-size: 1em;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Summary Row */
+.summary-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.stat-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+  border-top: 3px solid #c41e3a;
+}
+.stat-card .num { font-size: 2em; font-weight: 700; color: #1a1a2e; }
+.stat-card .label { font-size: .8em; color: #888; margin-top: 4px; }
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.tab {
+  padding: 10px 20px;
+  border: none;
+  background: #e8e0d4;
+  color: #555;
+  cursor: pointer;
+  border-radius: 8px 8px 0 0;
+  font-size: .9em;
+  font-weight: 600;
+  transition: all .2s;
+}
+.tab.active { background: #fff; color: #1a1a2e; box-shadow: 0 -2px 8px rgba(0,0,0,.06); }
+.tab:hover:not(.active) { background: #ddd5c8; }
+
+/* Charts */
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 16px;
+}
+.chart-box {
+  background: #fff;
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 1px 6px rgba(0,0,0,.06);
+}
+.chart-box h4 {
+  font-size: .9em;
+  color: #333;
+  margin-bottom: 12px;
+  text-align: center;
+}
+.bar-chart { display: flex; flex-direction: column; gap: 6px; }
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.bar-label {
+  width: 100px;
+  text-align: right;
+  font-size: .78em;
+  color: #666;
+  flex-shrink: 0;
+}
+.bar-track {
+  flex: 1;
+  height: 22px;
+  background: #f0ece4;
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width .6s ease;
+  display: flex;
+  align-items: center;
+  padding-left: 6px;
+  font-size: .7em;
+  color: #fff;
+  font-weight: 600;
+  min-width: fit-content;
+}
+.bar-fill.red { background: #c41e3a; }
+.bar-fill.blue { background: #3a7bd5; }
+.bar-fill.green { background: #2e7d32; }
+.bar-fill.orange { background: #e67e22; }
+.bar-fill.purple { background: #8e44ad; }
+.bar-fill.teal { background: #16a085; }
+.bar-fill.brown { background: #8b6914; }
+.bar-fill.pink { background: #c2185b; }
+.bar-pct { font-size: .75em; color: #888; width: 36px; text-align: left; }
+
+/* Table */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: .82em; }
+th {
+  background: #1a1a2e;
+  color: #fff;
+  padding: 10px 8px;
+  text-align: left;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+}
+td {
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+tr:hover td { background: #fff5f5; }
+.table-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.search-input {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: .85em;
+  width: 200px;
+}
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: .82em;
+  font-weight: 600;
+  transition: all .2s;
+}
+.btn-sm { padding: 4px 10px; font-size: .78em; }
+.btn-primary { background: #c41e3a; color: #fff; }
+.btn-primary:hover { background: #8b0000; }
+.btn-secondary { background: #f0ece4; color: #333; }
+.btn-secondary:hover { background: #ddd5c8; }
+.btn-danger { background: #c0392b; color: #fff; }
+.btn-danger:hover { background: #962d22; }
+.btn-success { background: #2e7d32; color: #fff; }
+.btn-success:hover { background: #1b5e20; }
+.btn-warning { background: #e67e22; color: #fff; }
+.btn-warning:hover { background: #d35400; }
+.btn-info { background: #3a7bd5; color: #fff; }
+.btn-info:hover { background: #2c5fa1; }
+
+/* Modal */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,.5);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 600px;
+  width: 95%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.modal h3 { margin-bottom: 16px; color: #1a1a2e; }
+.modal .field { margin-bottom: 10px; }
+.modal .field label { display: block; font-size: .82em; color: #555; margin-bottom: 3px; font-weight: 600; }
+.modal .field input, .modal .field select, .modal .field textarea {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: .85em;
+  font-family: inherit;
+}
+.modal .field textarea { height: 60px; resize: vertical; }
+.modal .btn-row { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
+.modal .field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+/* Export dropdown */
+.dropdown { position: relative; display: inline-block; }
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.15);
+  min-width: 160px;
+  z-index: 100;
+}
+.dropdown-menu.show { display: block; }
+.dropdown-menu a {
+  display: block;
+  padding: 10px 16px;
+  text-decoration: none;
+  color: #333;
+  font-size: .85em;
+  cursor: pointer;
+}
+.dropdown-menu a:hover { background: #f5f0e8; }
+
+.empty-state { text-align: center; padding: 60px 20px; color: #999; }
+.empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+.pagination button {
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  background: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: .8em;
+}
+.pagination button.active { background: #c41e3a; color: #fff; border-color: #c41e3a; }
+.pagination button:disabled { opacity: .4; cursor: not-allowed; }
+@media (max-width: 768px) {
+  .top-bar { padding: 12px 16px; }
+  .container { padding: 12px; }
+  .charts-grid { grid-template-columns: 1fr; }
+  .bar-label { width: 70px; font-size: .7em; }
+  .modal .field-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <div>
+    <h1>问卷数据管理后台</h1>
+    <div class="stats" id="headerStats">中华优秀传统文化认同转化调研</div>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn btn-info" onclick="loadSampleData()">加载样本数据</button>
+    <button class="btn btn-danger" onclick="clearAllData()">清空数据</button>
+    <div class="dropdown">
+      <button class="btn btn-success" onclick="toggleExport()">导出数据 ▾</button>
+      <div class="dropdown-menu" id="exportMenu">
+        <a onclick="exportCSV()">导出为 CSV</a>
+        <a onclick="exportJSON()">导出为 JSON</a>
+        <a onclick="exportExcel()">导出为 Excel (HTML)</a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="summary-row" id="summaryCards"></div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('stats')">数据统计</button>
+    <button class="tab" onclick="switchTab('records')">数据明细</button>
+    <button class="tab" onclick="switchTab('compare')">交叉分析</button>
+  </div>
+
+  <div id="tabStats">
+    <div class="charts-grid" id="chartsContainer"></div>
+  </div>
+
+  <div id="tabRecords" style="display:none">
+    <div class="card">
+      <div class="card-title">
+        <span>全部问卷数据</span>
+        <button class="btn btn-primary" onclick="openAddModal()">+ 新增记录</button>
+      </div>
+      <div class="table-controls">
+        <input class="search-input" id="searchInput" placeholder="搜索内容…" oninput="renderTable()">
+        <span style="font-size:.8em;color:#888" id="recordCount"></span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead id="tableHead"></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+      <div class="pagination" id="pagination"></div>
+    </div>
+  </div>
+
+  <div id="tabCompare" style="display:none">
+    <div class="card">
+      <div class="card-title">交叉分析：年级 × 了解程度</div>
+      <div id="crossTabResult"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit/Add Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h3 id="modalTitle">编辑记录</h3>
+    <div id="modalBody"></div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="closeModal()">取消</button>
+      <button class="btn btn-primary" onclick="saveModal()">保存</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const Q_LABELS = {
+  q1: '性别', q2: '年级', q3: '专业',
+  q4: '了解程度', q5: '了解领域', q6: '字体辨认', q7: '古典文学阅读',
+  q8: '兴趣程度', q9: '帮助作用', q10: '希望了解', q11: '认同度',
+  q12: '参与频率', q13: '参与活动', q14: '参与动机', q15: '国风使用',
+  q16: '课程满意度', q17: '形式丰富性', q18: '活动氛围', q19: '宣传力度',
+  q20: '期望活动', q21: '影响因素', q22: '参与意愿'
+};
+
+const Q_VALUES = {
+  q1: ['男','女'],
+  q2: ['大一','大二','大三','大四'],
+  q3: ['理工类','文史类','艺术类','其他'],
+  q4: ['非常了解','比较了解','一般','不太了解','完全不了解'],
+  q6: ['能辨认3种及以上','能辨认1-2种','只能分辨楷书','完全不能辨认'],
+  q7: ['读过3部及以上','读过1-2部','只读过改编版','完全没读过'],
+  q8: ['非常感兴趣','比较感兴趣','一般','不太感兴趣','完全不感兴趣'],
+  q9: ['非常有帮助','比较有帮助','一般','帮助不大','没有帮助'],
+  q10: ['非常希望','比较希望','一般','不太希望','完全不愿'],
+  q11: ['5-非常认同','4-比较认同','3-一般','2-不太认同','1-非常不认同'],
+  q12: ['经常参加','偶尔参加','很少参加','从不参加'],
+  q15: ['经常使用','偶尔使用','很少使用','从不使用'],
+  q16: ['非常满意','比较满意','一般','不太满意','非常不满意'],
+  q17: ['非常满意','比较满意','一般','不太满意','非常不满意'],
+  q18: ['非常满意','比较满意','一般','不太满意','非常不满意'],
+  q19: ['非常满意','比较满意','一般','不太满意','非常不满意'],
+  q22: ['非常愿意','比较愿意','看活动内容','不太愿意','完全不愿']
+};
+
+const MULTI_QS = ['q5','q13','q14','q20','q21'];
+const ALL_QS = ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11','q12','q13','q14','q15','q16','q17','q18','q19','q20','q21','q22'];
+
+// Proportional sample data generator
+const SAMPLE_PROPS = {
+  q1: { '男':0.669, '女':0.331 },
+  q2: { '大一':0.305, '大二':0.288, '大三':0.229, '大四':0.178 },
+  q3: { '理工类':0.415, '文史类':0.305, '艺术类':0.28 },
+  q4: { '非常了解':0.076, '比较了解':0.263, '一般':0.407, '不太了解':0.195, '完全不了解':0.059 },
+  q6: { '能辨认3种及以上':0.119, '能辨认1-2种':0.36, '只能分辨楷书':0.305, '完全不能辨认':0.216 },
+  q7: { '读过3部及以上':0.153, '读过1-2部':0.415, '只读过改编版':0.305, '完全没读过':0.127 },
+  q8: { '非常感兴趣':0.432, '比较感兴趣':0.432, '一般':0.106, '不太感兴趣':0.021, '完全不感兴趣':0.009 },
+  q9: { '非常有帮助':0.458, '比较有帮助':0.364, '一般':0.131, '帮助不大':0.034, '没有帮助':0.013 },
+  q10: { '非常希望':0.398, '比较希望':0.398, '一般':0.153, '不太希望':0.034, '完全不愿':0.017 },
+  q11: { '5-非常认同':0.407, '4-比较认同':0.373, '3-一般':0.161, '2-不太认同':0.042, '1-非常不认同':0.017 },
+  q12: { '经常参加':0.182, '偶尔参加':0.377, '很少参加':0.305, '从不参加':0.136 },
+  q15: { '经常使用':0.148, '偶尔使用':0.347, '很少使用':0.305, '从不使用':0.199 },
+  q16: { '非常满意':0.093, '比较满意':0.229, '一般':0.415, '不太满意':0.178, '非常不满意':0.085 },
+  q17: { '非常满意':0.119, '比较满意':0.237, '一般':0.381, '不太满意':0.186, '非常不满意':0.076 },
+  q18: { '非常满意':0.076, '比较满意':0.212, '一般':0.39, '不太满意':0.212, '非常不满意':0.11 },
+  q19: { '非常满意':0.085, '比较满意':0.258, '一般':0.403, '不太满意':0.178, '非常不满意':0.076 },
+  q22: { '非常愿意':0.288, '比较愿意':0.415, '看活动内容':0.22, '不太愿意':0.051, '完全不愿':0.025 },
+  q5: { '传统节日':0.784, '传统饮食':0.653, '古典文学':0.475, '传统科技':0.424, '书法绘画':0.352, '传统思想':0.318, '传统音乐':0.263, '传统手工艺':0.22, '传统戏曲':0.186 },
+  q13: { '传统节日活动':0.657, '文化讲座':0.386, '传统文化课程':0.343, '汉服活动':0.28, '书法绘画':0.254, '传统手工艺':0.225, '文化实践':0.157, '传统戏曲':0.123, '都没参加过':0.11 },
+  q14: { '个人兴趣':0.458, '学校组织':0.525, '综测加分':0.386, '同学邀请':0.314, '打发时间':0.22, '其他':0.085 },
+  q20: { '体验类':0.729, '实践类':0.585, '竞赛类':0.411, '讲座类':0.339, '线上类':0.305, '展示类':0.284, '演出类':0.258 },
+  q21: { '学业忙碌':0.682, '形式单一':0.555, '宣传不足':0.487, '距离远':0.424, '缺少同伴':0.352, '门槛高':0.288, '不实用':0.225, '其他':0.102 }
+};
+
+let data = [];
+let currentTab = 'stats';
+let currentPage = 1;
+const PAGE_SIZE = 20;
+let editId = null;
+
+function weightedPick(options, weights) {
+  const keys = Object.keys(options);
+  const vals = Object.values(options);
+  const r = Math.random();
+  let cum = 0;
+  for (let i = 0; i < keys.length; i++) {
+    cum += vals[i];
+    if (r < cum) return keys[i];
+  }
+  return keys[keys.length-1];
+}
+
+function pickMulti(options, weights) {
+  const result = [];
+  for (const [k, w] of Object.entries(weights)) {
+    if (Math.random() < w) result.push(k);
+  }
+  if (result.length === 0) {
+    const keys = Object.keys(weights);
+    result.push(keys[Math.floor(Math.random() * keys.length)]);
+  }
+  return result;
+}
+
+function generateSample(n = 236) {
+  const records = [];
+  for (let i = 0; i < n; i++) {
+    const rec = { id: Date.now() + i, submittedAt: new Date(Date.now() - Math.random() * 30*86400000).toISOString() };
+    for (const q of ALL_QS) {
+      if (MULTI_QS.includes(q)) {
+        rec[q] = pickMulti(SAMPLE_PROPS[q], SAMPLE_PROPS[q]);
+      } else if (SAMPLE_PROPS[q]) {
+        rec[q] = weightedPick(SAMPLE_PROPS[q], SAMPLE_PROPS[q]);
+      } else {
+        rec[q] = '';
+      }
+    }
+    rec.q23 = Math.random() < 0.3 ? '希望学校多举办传统文化活动' : '';
+    records.push(rec);
+  }
+  return records;
+}
+
+function loadSampleData() {
+  if (data.length > 0 && !confirm('当前已有数据，加载样本数据会覆盖，确定吗？')) return;
+  data = generateSample(236);
+  saveData();
+  refreshAll();
+}
+
+function getData() {
+  try { return JSON.parse(localStorage.getItem('survey_responses') || '[]'); }
+  catch(e) { return []; }
+}
+
+function saveData() {
+  localStorage.setItem('survey_responses', JSON.stringify(data));
+}
+
+function refreshAll() {
+  updateSummary();
+  if (currentTab === 'stats') renderCharts();
+  else if (currentTab === 'records') renderTable();
+  else if (currentTab === 'compare') renderCrossTab();
+}
+
+function updateSummary() {
+  const n = data.length;
+  if (n === 0) {
+    document.getElementById('summaryCards').innerHTML = '<div class="empty-state"><div class="icon">📊</div><div>暂无数据，请点击"加载样本数据"</div></div>';
+    document.getElementById('headerStats').textContent = '暂无数据';
+    return;
+  }
+  document.getElementById('headerStats').textContent = `共 ${n} 条记录`;
+
+  const q2count = {};
+  const q8count = {};
+  const q12count = {};
+  data.forEach(r => {
+    q2count[r.q2] = (q2count[r.q2] || 0) + 1;
+    q8count[r.q8] = (q8count[r.q8] || 0) + 1;
+    q12count[r.q12] = (q12count[r.q12] || 0) + 1;
+  });
+
+  const getTop = (obj) => Object.entries(obj).sort((a,b) => b[1]-a[1])[0];
+  const topGrade = getTop(q2count) || ['-',0];
+  const topInterest = getTop(q8count) || ['-',0];
+  const topFreq = getTop(q12count) || ['-',0];
+
+  document.getElementById('summaryCards').innerHTML = `
+    <div class="stat-card"><div class="num">${n}</div><div class="label">总答卷数</div></div>
+    <div class="stat-card"><div class="num">${(topInterest[1]/n*100).toFixed(0)}%</div><div class="label">对传统文化感兴趣</div></div>
+    <div class="stat-card"><div class="num">${(data.filter(r=>['非常愿意','比较愿意'].includes(r.q22)).length/n*100).toFixed(0)}%</div><div class="label">愿意参加活动</div></div>
+    <div class="stat-card"><div class="num">${(data.filter(r=>r.q12==='经常参加').length/n*100).toFixed(0)}%</div><div class="label">经常参与活动</div></div>
+  `;
+}
+
+function renderCharts() {
+  if (data.length === 0) {
+    document.getElementById('chartsContainer').innerHTML = '<div class="empty-state"><div class="icon">📊</div><div>暂无数据可统计</div></div>';
+    return;
+  }
+  const n = data.length;
+  const SINGLE_QS = ['q1','q2','q3','q4','q6','q7','q8','q9','q10','q11','q12','q15','q16','q17','q18','q19','q22'];
+  const COLORS = ['red','blue','green','orange','purple','teal','brown','pink'];
+  let html = '';
+  for (const q of SINGLE_QS) {
+    const count = {};
+    data.forEach(r => { const v = r[q]; if (v) count[v] = (count[v] || 0) + 1; });
+    const entries = Object.entries(count).sort((a,b) => b[1]-a[1]);
+    const bars = entries.map(([k,v], i) => {
+      const pct = (v/n*100).toFixed(1);
+      return `<div class="bar-row"><span class="bar-label">${k}</span><div class="bar-track"><div class="bar-fill ${COLORS[i%COLORS.length]}" style="width:${pct}%">${v}</div></div><span class="bar-pct">${pct}%</span></div>`;
+    }).join('');
+    html += `<div class="chart-box"><h4>${Q_LABELS[q]||q}</h4><div class="bar-chart">${bars}</div></div>`;
+  }
+  // Multi-select Qs
+  for (const q of MULTI_QS) {
+    const count = {};
+    data.forEach(r => {
+      const vals = r[q];
+      if (Array.isArray(vals)) vals.forEach(v => { count[v] = (count[v] || 0) + 1; });
+    });
+    const entries = Object.entries(count).sort((a,b) => b[1]-a[1]);
+    const bars = entries.map(([k,v], i) => {
+      const pct = (v/n*100).toFixed(1);
+      return `<div class="bar-row"><span class="bar-label">${k}</span><div class="bar-track"><div class="bar-fill ${COLORS[i%COLORS.length]}" style="width:${pct}%">${v}</div></div><span class="bar-pct">${pct}%</span></div>`;
+    }).join('');
+    html += `<div class="chart-box"><h4>${Q_LABELS[q]||q}（多选）</h4><div class="bar-chart">${bars}</div></div>`;
+  }
+  document.getElementById('chartsContainer').innerHTML = html;
+}
+
+function renderTable() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  let filtered = data;
+  if (search) {
+    filtered = data.filter(r => JSON.stringify(r).toLowerCase().includes(search));
+  }
+  document.getElementById('recordCount').textContent = `共 ${filtered.length} 条`;
+
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  if (currentPage > totalPages) currentPage = 1;
+  const start = (currentPage - 1) * PAGE_SIZE;
+  const page = filtered.slice(start, start + PAGE_SIZE);
+
+  const DISPLAY_QS = ['q1','q2','q3','q4','q8','q11','q12','q22'];
+  let thead = '<tr><th>ID</th>';
+  DISPLAY_QS.forEach(q => { thead += `<th>${Q_LABELS[q]}</th>`; });
+  thead += '<th>提交时间</th><th>操作</th></tr>';
+  document.getElementById('tableHead').innerHTML = thead;
+
+  let tbody = '';
+  page.forEach(r => {
+    let row = `<td>${String(r.id).slice(-6)}</td>`;
+    DISPLAY_QS.forEach(q => {
+      let val = r[q];
+      if (Array.isArray(val)) val = val.join('; ');
+      row += `<td title="${(val||'').replace(/"/g,'&quot;')}">${val||'-'}</td>`;
+    });
+    row += `<td>${r.submittedAt ? new Date(r.submittedAt).toLocaleDateString() : '-'}</td>`;
+    row += `<td><button class="btn btn-sm btn-warning" onclick="openEditModal(${r.id})">编辑</button> <button class="btn btn-sm btn-danger" onclick="deleteRecord(${r.id})">删除</button></td>`;
+    tbody += `<tr>${row}</tr>`;
+  });
+  document.getElementById('tableBody').innerHTML = tbody;
+
+  // Pagination
+  let pagi = `<button ${currentPage<=1?'disabled':''} onclick="goPage(${currentPage-1})">‹</button>`;
+  for (let i = Math.max(1, currentPage-2); i <= Math.min(totalPages, currentPage+2); i++) {
+    pagi += `<button class="${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
+  }
+  pagi += `<button ${currentPage>=totalPages?'disabled':''} onclick="goPage(${currentPage+1})">›</button>`;
+  document.getElementById('pagination').innerHTML = pagi;
+
+  if (filtered.length === 0) {
+    document.getElementById('tableBody').innerHTML = '<tr><td colspan="20" style="text-align:center;padding:40px;color:#999">暂无匹配记录</td></tr>';
+  }
+}
+
+function goPage(p) { currentPage = p; renderTable(); }
+
+function deleteRecord(id) {
+  if (!confirm('确定删除该记录吗？')) return;
+  data = data.filter(r => r.id !== id);
+  saveData();
+  refreshAll();
+}
+
+function openEditModal(id) {
+  editId = id;
+  const rec = data.find(r => r.id === id);
+  if (!rec) return;
+  document.getElementById('modalTitle').textContent = `编辑记录 #${String(id).slice(-6)}`;
+  buildModalForm(rec);
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function openAddModal() {
+  editId = null;
+  document.getElementById('modalTitle').textContent = '新增记录';
+  const empty = { id: Date.now() };
+  buildModalForm(empty);
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function buildModalForm(rec) {
+  let html = '';
+  for (const q of ALL_QS) {
+    if (MULTI_QS.includes(q)) {
+      const opts = Q_VALUES[q] || [];
+      html += `<div class="field"><label>${Q_LABELS[q]||q}（多选）</label><div style="display:flex;flex-wrap:wrap;gap:6px">`;
+      opts.forEach(o => {
+        const checked = Array.isArray(rec[q]) && rec[q].includes(o) ? 'checked' : '';
+        html += `<label style="font-size:.82em;display:flex;align-items:center;gap:3px"><input type="checkbox" name="${q}" value="${o}" ${checked}> ${o}</label>`;
+      });
+      html += '</div></div>';
+    } else {
+      const opts = Q_VALUES[q];
+      if (opts) {
+        html += `<div class="field"><label>${Q_LABELS[q]||q}</label><select name="${q}"><option value="">-- 请选择 --</option>`;
+        opts.forEach(o => {
+          const sel = rec[q] === o ? 'selected' : '';
+          html += `<option value="${o}" ${sel}>${o}</option>`;
+        });
+        html += '</select></div>';
+      } else {
+        html += `<div class="field"><label>${Q_LABELS[q]||q}</label><input name="${q}" value="${rec[q]||''}"></div>`;
+      }
+    }
+  }
+  html += `<div class="field"><label>开放建议</label><textarea name="q23">${(rec.q23||'')}</textarea></div>`;
+  document.getElementById('modalBody').innerHTML = html;
+}
+
+function saveModal() {
+  const formData = {};
+  const form = document.getElementById('modalBody');
+  ALL_QS.forEach(q => {
+    if (MULTI_QS.includes(q)) {
+      const checked = form.querySelectorAll(`input[name="${q}"]:checked`);
+      formData[q] = Array.from(checked).map(c => c.value);
+    } else {
+      const sel = form.querySelector(`[name="${q}"]`);
+      formData[q] = sel ? sel.value : '';
+    }
+  });
+  formData.q23 = form.querySelector('[name="q23"]')?.value || '';
+
+  if (editId) {
+    const idx = data.findIndex(r => r.id === editId);
+    if (idx >= 0) {
+      data[idx] = { ...data[idx], ...formData };
+    }
+  } else {
+    formData.id = Date.now();
+    formData.submittedAt = new Date().toISOString();
+    data.push(formData);
+  }
+  saveData();
+  closeModal();
+  refreshAll();
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  editId = null;
+}
+
+// Click overlay to close
+document.getElementById('modalOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll(`.tab`).forEach(t => { if (t.textContent.includes({'stats':'数据统计','records':'数据明细','compare':'交叉分析'}[tab])) t.classList.add('active'); });
+  document.getElementById('tabStats').style.display = tab === 'stats' ? 'block' : 'none';
+  document.getElementById('tabRecords').style.display = tab === 'records' ? 'block' : 'none';
+  document.getElementById('tabCompare').style.display = tab === 'compare' ? 'block' : 'none';
+  refreshAll();
+}
+
+// Fix tab switching
+document.querySelector('.tabs').addEventListener('click', function(e) {
+  if (e.target.classList.contains('tab')) {
+    const text = e.target.textContent;
+    const map = { '数据统计':'stats', '数据明细':'records', '交叉分析':'compare' };
+    switchTab(map[text] || 'stats');
+  }
+});
+
+function renderCrossTab() {
+  if (data.length === 0) {
+    document.getElementById('crossTabResult').innerHTML = '<div class="empty-state"><div class="icon">📊</div><div>暂无数据</div></div>';
+    return;
+  }
+  const grades = ['大一','大二','大三','大四'];
+  const levels = ['非常了解','比较了解','一般','不太了解','完全不了解'];
+  const matrix = {};
+  grades.forEach(g => { matrix[g] = {}; levels.forEach(l => { matrix[g][l] = 0; }); });
+  data.forEach(r => {
+    if (matrix[r.q2] && matrix[r.q2][r.q4] !== undefined) matrix[r.q2][r.q4]++;
+  });
+
+  let html = `<div style="overflow-x:auto"><table><thead><tr><th>年级 \\ 了解程度</th>`;
+  levels.forEach(l => { html += `<th>${l}</th>`; });
+  html += `<th>合计</th></tr></thead><tbody>`;
+  grades.forEach(g => {
+    html += `<tr><td style="font-weight:600">${g}</td>`;
+    let total = 0;
+    levels.forEach(l => {
+      const v = matrix[g][l] || 0;
+      total += v;
+      html += `<td>${v}</td>`;
+    });
+    html += `<td>${total}</td></tr>`;
+  });
+  html += '</tbody></table></div>';
+  document.getElementById('crossTabResult').innerHTML = html;
+}
+
+function clearAllData() {
+  if (!confirm('确定清空所有数据吗？此操作不可撤销！')) return;
+  data = [];
+  saveData();
+  refreshAll();
+}
+
+function toggleExport() {
+  document.getElementById('exportMenu').classList.toggle('show');
+}
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.dropdown')) {
+    document.getElementById('exportMenu').classList.remove('show');
+  }
+});
+
+function exportJSON() {
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  downloadBlob(blob, 'survey_data.json');
+}
+
+function exportCSV() {
+  const headers = ['id','submittedAt',...ALL_QS,'q23'];
+  const lines = [headers.join(',')];
+  data.forEach(r => {
+    const row = headers.map(h => {
+      let v = r[h];
+      if (Array.isArray(v)) v = v.join(';');
+      return `"${(v||'').replace(/"/g,'""')}"`;
+    });
+    lines.push(row.join(','));
+  });
+  const bom = '\uFEFF';
+  const blob = new Blob([bom + lines.join('\n')], {type:'text/csv;charset=utf-8'});
+  downloadBlob(blob, 'survey_data.csv');
+}
+
+function exportExcel() {
+  const headers = ['ID','提交时间',...ALL_QS.map(q => Q_LABELS[q]||q),'建议'];
+  let html = '<table><tr>'+headers.map(h => `<th>${h}</th>`).join('')+'</tr>';
+  data.forEach(r => {
+    html += '<tr>';
+    html += `<td>${r.id}</td><td>${r.submittedAt||''}</td>`;
+    ALL_QS.forEach(q => {
+      let v = r[q];
+      if (Array.isArray(v)) v = v.join('; ');
+      html += `<td>${v||''}</td>`;
+    });
+    html += `<td>${(r.q23||'')}</td>`;
+    html += '</tr>';
+  });
+  html += '</table>';
+  const blob = new Blob([html], {type:'application/vnd.ms-excel;charset=utf-8'});
+  downloadBlob(blob, 'survey_data.xls');
+}
+
+function downloadBlob(blob, name) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+// Init
+data = getData();
+if (data.length === 0) {
+  data = generateSample(236);
+  saveData();
+}
+refreshAll();
+</script>
+</body>
+</html>

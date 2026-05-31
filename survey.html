@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中华优秀传统文化认同转化调查问卷</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, "Microsoft YaHei", "PingFang SC", sans-serif;
+  background: linear-gradient(135deg, #f5f0e8 0%, #e8d5b7 100%);
+  min-height: 100vh;
+  padding: 20px;
+}
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+.header {
+  background: linear-gradient(135deg, #8b0000 0%, #c41e3a 100%);
+  color: #fff;
+  padding: 40px;
+  border-radius: 16px 16px 0 0;
+  text-align: center;
+}
+.header h1 { font-size: 1.5em; margin-bottom: 8px; letter-spacing: 2px; }
+.header p { opacity: .85; font-size: .9em; }
+.header .sub { margin-top: 12px; font-size: .8em; opacity: .7; }
+.progress-bar {
+  height: 4px;
+  background: rgba(255,255,255,.3);
+  margin-top: 16px;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: #ffd700;
+  width: 0%;
+  transition: width .4s ease;
+  border-radius: 2px;
+}
+.form-card {
+  background: #fff;
+  padding: 32px;
+  box-shadow: 0 4px 20px rgba(0,0,0,.1);
+  border-radius: 0 0 16px 16px;
+}
+.section {
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+.section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.section-title {
+  font-size: 1.1em;
+  font-weight: 700;
+  color: #8b0000;
+  margin-bottom: 16px;
+  padding-left: 12px;
+  border-left: 4px solid #c41e3a;
+}
+.question {
+  margin-bottom: 22px;
+}
+.question:last-child { margin-bottom: 0; }
+.q-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 10px;
+  font-size: .95em;
+  color: #333;
+}
+.q-label .required { color: #c41e3a; margin-left: 2px; }
+.q-label .q-num {
+  display: inline-block;
+  background: #8b0000;
+  color: #fff;
+  width: 22px;
+  height: 22px;
+  text-align: center;
+  line-height: 22px;
+  border-radius: 50%;
+  font-size: 12px;
+  margin-right: 6px;
+  flex-shrink: 0;
+}
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.option-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid #e0ddd5;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all .2s;
+  font-size: .92em;
+}
+.option-label:hover { border-color: #c41e3a; background: #fff5f5; }
+.option-label input:checked + span { color: #c41e3a; font-weight: 600; }
+.option-label:has(input:checked) { border-color: #c41e3a; background: #fff0f0; }
+.option-label input[type="radio"],
+.option-label input[type="checkbox"] { accent-color: #c41e3a; width: 16px; height: 16px; }
+textarea {
+  width: 100%;
+  height: 80px;
+  padding: 12px;
+  border: 1px solid #e0ddd5;
+  border-radius: 8px;
+  resize: vertical;
+  font-family: inherit;
+  font-size: .92em;
+  transition: border-color .2s;
+}
+textarea:focus { outline: none; border-color: #c41e3a; }
+.btn-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+.btn {
+  padding: 12px 32px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: all .2s;
+  font-weight: 600;
+}
+.btn-primary { background: #c41e3a; color: #fff; }
+.btn-primary:hover { background: #8b0000; transform: translateY(-1px); }
+.btn-secondary { background: #f0ece4; color: #333; }
+.btn-secondary:hover { background: #e0d8cc; }
+.btn-success { background: #2e7d32; color: #fff; }
+.btn-success:hover { background: #1b5e20; }
+.btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+.thank-you {
+  text-align: center;
+  padding: 40px 20px;
+}
+.thank-you .icon { font-size: 64px; margin-bottom: 16px; }
+.thank-you h2 { color: #8b0000; margin-bottom: 12px; }
+.thank-you p { color: #666; line-height: 1.6; }
+.hidden { display: none; }
+@media (max-width: 600px) {
+  body { padding: 12px; }
+  .header { padding: 24px 16px; }
+  .header h1 { font-size: 1.2em; }
+  .form-card { padding: 20px 16px; }
+  .btn { flex: 1; text-align: center; }
+}
+</style>
+</head>
+<body>
+<div class="container" id="app">
+  <div class="header">
+    <h1>中华优秀传统文化认同转化调查问卷</h1>
+    <p>青岛科技大学 · 信息科学技术学院</p>
+    <p class="sub">本问卷匿名填写，数据仅用于学术研究，感谢您的参与！</p>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div style="margin-top:8px;font-size:.8em;opacity:.8"><span id="currentStep">1</span> / <span id="totalSteps">6</span></div>
+  </div>
+
+  <div class="form-card" id="formCard">
+    <form id="surveyForm">
+      <!-- ============ 第一部分 ============ -->
+      <div class="section" id="section1">
+        <div class="section-title">第一部分：基本信息</div>
+
+        <div class="question">
+          <span class="q-label"><span class="q-num">1</span>您的性别是？<span class="required">*</span></span>
+          <div class="options" data-q="q1">
+            <label class="option-label"><input type="radio" name="q1" value="男"><span>男</span></label>
+            <label class="option-label"><input type="radio" name="q1" value="女"><span>女</span></label>
+          </div>
+        </div>
+
+        <div class="question">
+          <span class="q-label"><span class="q-num">2</span>您所在的年级是？<span class="required">*</span></span>
+          <div class="options" data-q="q2">
+            <label class="option-label"><input type="radio" name="q2" value="大一"><span>大一</span></label>
+            <label class="option-label"><input type="radio" name="q2" value="大二"><span>大二</span></label>
+            <label class="option-label"><input type="radio" name="q2" value="大三"><span>大三</span></label>
+            <label class="option-label"><input type="radio" name="q2" value="大四"><span>大四</span></label>
+          </div>
+        </div>
+
+        <div class="question">
+          <span class="q-label"><span class="q-num">3</span>您的专业类别是？<span class="required">*</span></span>
+          <div class="options" data-q="q3">
+            <label class="option-label"><input type="radio" name="q3" value="理工类"><span>理工类</span></label>
+            <label class="option-label"><input type="radio" name="q3" value="文史类"><span>文史类</span></label>
+            <label class="option-label"><input type="radio" name="q3" value="艺术类"><span>艺术类</span></label>
+            <label class="option-label"><input type="radio" name="q3" value="其他"><span>其他</span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ 第二部分 ============ -->
+      <div class="section" id="section2">
+        <div class="section-title">第二部分：传统文化认知水平</div>
+
+        <div class="question">
+          <span class="q-label"><span class="q-num">4</span>您对中华优秀传统文化的了解程度如何？<span class="required">*</span></span>
+          <div class="options" data-q="q4">
+            <label class="option-label"><input type="radio" name="q4" value="非常了解"><span>非常了解</span></label>
+            <label class="option-label"><input type="radio" name="q4" value="比较了解"><span>比较了解</span></label>
+            <label class="option-label"><input type="radio" name="q4" value="一般"><span>一般</span></label>
+            <label class="option-label"><input type="radio" name="q4" value="不太了解"><span>不太了解</span></label>
+            <label class="option-label"><input type="radio" name="q4" value="完全不了解"><span>完全不了解</span></label>
+          </div>
+        </div>
+
+        <div class="question">
+          <span class="q-label"><span class="q-num">5</span>您对以下哪些传统文化比较了解？（可多选）</span>
+          <div class="options" data-q="q5">
+            <label class="option-label"><input type="checkbox" name="q5" value="传统节日"><span>传统节日（春节、端午等）</span></label>
+            <label class="option-label"><input type="checkbox" name="q5" value="传统饮食"><span>传统饮食/饮食文化</span></label>
+            <label class="option-label"><input type="checkbox" name="q5" value="古典文学"><span>古典文学/诗词</span></label>
+            <label class="option-label"><input type="checkbox" name="q5" value="传统科技"><span>传统科技（中医、四大发明等）</span></label>
+            <label class="option-label"><input type="checkbox" name="q5" value="书法绘画"><span>书法/国画</span></label>
+            <label class="option-label"><input type="checkbox" name="q5" value="传统思想"><span>传统思想（儒、道、法等）</span></label>
+            <label class="option-label"><input type="checkbox" name="q5" value="传统音乐"><span>传统音乐/戏曲</span></label>
+            <label class="option-label"><input type="checkbox" name="q5" value="传统手工艺"><span>传统手工艺</span></label>
+            <label class="option-label"><input type="checkbox" name="q5" value="传统戏曲"><span>传统戏曲/曲艺</span></label>
+          </div>
+        </div>
+
+        <div class="question">
+          <span class="q-label"><span class="q-num">6</span>您能辨认以下哪种字体（如楷书、行书、草书等）？</span>
+          <div class="options" data-q="q6">
+            <label class="option-label"><input type="radio" name="q6" value="能辨认3种及以上"><span>能辨认3种及以上</span></label>
+            <label class="option-label"><input type="radio" name="q6" value="能辨认1-2种"><span>能辨认1-2种</span></label>
+            <label class="option-label"><input type="radio" name="q6" value="能分辨楷书"><span>只能分辨楷书</span></label>
+            <label class="option-label"><input type="radio" name="q6" value="完全不能"><span>完全不能辨认</span></label>
+          </div>
+        </div>
+
+        <div class="question">
+          <span class="q-label"><span class="q-num">7</span>您读过中国古典文学名著（如四大名著等）吗？<span class="required">*</span></span>
+          <div class="options" data-q="q7">
+            <label class="option-label"><input type="radio" name="q7" value="读过3部及以上"><span>读过3部及以上</span></label>
+            <label class="option-label"><input type="radio" name="q7" value="读过1-2部"><span>读过1-2部</span></label>
+            <label class="option-label"><input type="radio" name="q7" value="只读过改编版"><span>只读过改编版/片段</span></label>
+            <label class="option-label"><input type="radio" name="q7" value="完全没读过"><span>完全没读过</span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ 第三部分 ============ -->
+      <div class="section" id="section3">
+        <div class="section-title">第三部分：态度与认同</div>
+
+        <div class="question">
+          <span class="q-label"><span class="q-num">8</span>您对中华优秀传统文化感兴趣吗？<span class="required">*</span></span>
+          <div class="options" data-q="q8">
+            <label class="option-label"><input type="radio" name="q8" value="非常感兴趣"><span>非常感兴趣</span></label>
+            <label class="option-label"><input type="radio" name="q8" value="比较感兴趣"><span>比较感兴趣</span></label>
+            <label class="option-label"><input type="radio" name="q8" value="一般"><span>一般</span></label>
+            <label class="option-label"><input type="radio" name="q8" value="不太感兴趣"><span>不太感兴趣</span></label>
+            <label class="option-label"><input type="radio" name="q8" value="完全不感兴趣"><span>完全不感兴趣</span></label>
+          </div>
+        </div>
+
+        <div class="question">
+          <span class="q-label"><span class="q-num">9</span>您认为传统文化对个人成长是否有帮助作用？<span class="required">*</span></span>
+          <div class="options" data-q="q9">
+            <label class="option-label"><input type="radio" name="q9" value="非常有帮助"><span>非常有帮助</span></label>
+            <label class="option-label"><input type="radio" name="q9" value="比较有帮助"><span>比较有帮助</span></label>
+            <label class="option-label"><input type="radio" name="q9" value="一般"><span>一般</span></label>
+            <label class="option-label"><input type="radio" name="q9" value="帮助不大"><span>帮助不大</span></label>
+            <label class="option-label"><input type="radio" name="q9" value="没有帮助"><span>没有帮助</span></label>
+          </div>
+        </div>
+
+        <div class="question">
+          <span class="q-label"><span class="q-num">10</span>您希望更深入地了解传统文化吗？<span class="required">*</span></span>
+          <div class="options" data-q="q10">
+            <label class="option-label"><input type="radio" name="q10" value="非常希望"><span>非常希望</span></label>
+            <label class="option-label"><input type="radio" name="q10" value="比较希望"><span>比较希望</span></label>
+            <label class="option-label"><input type="radio" name="q10" value="一般"><span>一般</span></label>
+            <label class="option-label"><input type="radio" name="q10" value="不太希望"><span>不太希望</span></label>
+            <label class="option-label"><input type="radio" name="q10" value="完全不愿"><span>完全不愿</span></label>
+          </div>
+        </div>
+
+        <div class="question">
+          <span class="q-label"><span class="q-num">11</span>您对"中华优秀传统文化"的认同程度如何？（1=非常不认同，5=非常认同）<span class="required">*</span></span>
+          <div class="options" data-q="q11">
+            <label class="option-label"><input type="radio" name="q11" value="5-非常认同"><span>5分 - 非常认同</span></label>
+            <label class="option-label"><input type="radio" name="q11" value="4-比较认同"><span>4分 - 比较认同</span></label>
+            <label class="option-label"><input type="radio" name="q11" value="3-一般"><span>3分 - 一般</span></label>
+            <label class="option-label"><input type="radio" name="q11" value="2-不太认同"><span>2分 - 不太认同</span></label>
+            <label class="option-label"><input type="radio" name="q11" value="1-非常不认同"><span>1分 - 非常不认同</span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ 第四部分 ============ -->
+      <div class="section" id="section4">
+        <div class="section-title">第四部分：行为与参与</div>
+
+        <div class="question">
+          <span class="q-label"><span class="q-num">12</span>您参与传统文化活动的频率是？<span class="required">*</span></span>
+          <div class="options" data-q="q12">
+            <label class="option-label"><input type="radio" name="q12" value="经常参加"><span>经常参加（每月2次及以上）</span></label>
+            <label class="option-label"><input type="radio" name="q12" value="偶尔参加"><span>偶尔参加（每学期几次）</span></label>
+            <label class="option-label"><input type="radio" name="q12" value="很少参加"><span>很少参加（每年1-2次）</span></label>
+            <label class="option-label"><input type="radio" name="q12" value="从不参加"><span>从不参加</span></label>
+          </div>
+        </div>
+
+        <div class="question">
+          <span class="q-label"><span class="q-num">13</span>您参加过哪些传统文化活动？（可多选）</span>
+          <div class="options" data-q="q13">
+            <label class="option-label"><input type="checkbox" name="q13" value="传统节日活动"><span>传统节日活动（包粽子、赏月等）</span></label>
+            <label class="option-label"><input type="checkbox" name="q13" value="文化讲座"><span>文化讲座/诗词比赛</span></label>
+            <label class="option-label"><input type="checkbox" name="q13" value="传统文化课程"><span>传统文化课程</span></label>
+            <label class="option-label"><input type="checkbox" name="q13" value="汉服活动"><span>汉服/传统服饰活动</span></label>
+            <label class="option-label"><input type="checkbox" name="q13" value="书法绘画"><span>书法/国画活动</span></label>
+            <label class="option-label"><input type="checkbox" name="q13" value="传统手工艺"><span>传统手工艺体验（剪纸、编织等）</span></label>
+            <label class="option-label"><input type="checkbox" name="q13" value="文化实践"><span>文化实践/研学活动</span></label>
+            <label class="option-label"><input type="checkbox" name="q13" value="传统戏曲"><span>传统戏曲/曲艺演出</span></label>
+            <label class="option-label"><input type="checkbox" name="q13" value="都没参加过"><span>以上都没参加过</span></label>
+          </div>
+        </div>
+
+        <div class="question">
+          <span class="q-label"><span class="q-num">14</span>您参加传统文化活动的主要动机是什么？（可多选）</span>
+          <div class="options" data-q="q14">
+            <label class="option-label"><input type="checkbox" name="q14" value="个人兴趣"><span>个人兴趣</span></label>
+            <label class="option-label"><input type="checkbox" name="q14" value="学校组织"><span>学校/班级组织要求</span></label>
+            <label class="option-label"><input type="checkbox" name="q14" value="综测加分"><span>为了综测/学分加分</span></label>
+            <label class="option-label"><input type="checkbox" name="q14" value="同学邀请"><span>同学邀请/结伴参加</span></label>
+            <label class="option-label"><input type="checkbox" name="q14" value="打发时间"><span>打发空闲时间</span></label>
+            <label class="option-label"><input type="checkbox" name="q14" value="其他"><span>其他</span></label>
+          </div>
+        </div>
+
+        <div class="question">
+          <span class="q-label"><span class="q-num">15</span>您日常生活中使用国风元素（如汉服、国风文创等）的情况是？<span class="required">*</span></span>
+          <div class="options" data-q="q15">
+            <label class="option-label"><input type="radio" name="q15" value="经常使用"><span>经常使用</span></label>
+            <label class="option-label"><input type="radio" name="q15" value="偶尔使用"><span>偶尔使用</span></label>
+            <label class="option-label"><input type="radio" name="q15" value="很少使用"><span>很少使用</span></label>
+            <label class="option-label"><input type="radio" name="q15" value="从不使用"><span>从不使用</span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ 第五部分 ============ -->
+      <div class="section" id="section5">
+        <div class="section-title">第五部分：学校教育与环境评价</div>
+
+        <div class="question">
+          <span class="q-label"><span class="q-num">16</span>您对学校目前传统文化课程设置的满意度如何？<span class="required">*</span></span>
+          <div class="options" data-q="q16">
+            <label class="option-label"><input type="radio" name="q16" value="非常满意"><span>非常满意</span></label>
+            <label class="option-label"><input type="radio" name="q16" value="比较满意"><span>比较满意</span></label>
+            <label class="option-label"><input type="radio" name="q16" value="一般"><span>一般</span></label>
+            <label class="option-label"><input type="radio" name="q16" value="不太满意"><span>不太满意</span></label>
+            <label class="option-label"><input type="radio" name="q16" value="非常不满意"><span>非常不满意</span></label>
+          </div>
+        </div>
+
+        <div class="question">
+          <span class="q-label"><span class="q-num">17</span>您对学校传统文化课程在开展形式丰富性方面是否满意？<span class="required">*</span></span>
+          <div class="options" data-q="q17">
+            <label class="option-label"><input type="radio" name="q17" value="非常满意"><span>非常满意</span></label>
+            <label class="option-label"><input type="radio" name="q17" value="比较满意"><span>比较满意</span></label>
+            <label class="option-label"><input type="radio" name="q17" value="一般"><span>一般</span></label>
+            <label class="option-label"><input type="radio" name="q17" value="不太满意"><span>不太满意</span></label>
+            <label class="option-label"><input type="radio" name="q17" value="非常不满意"><span>非常不满意</span></label>
+          </div>
+        </div>
+
+        <div class="question">
+          <span class="q-label"><span class="q-num">18</span>您对校园传统文化活动氛围是否满意？<span class="required">*</span></span>
+          <div class="options" data-q="q18">
+            <label class="option-label"><input type="radio" name="q18" value="非常满意"><span>非常满意</span></label>
+            <label class="option-label"><input type="radio" name="q18" value="比较满意"><span>比较满意</span></label>
+            <label class="option-label"><input type="radio" name="q18" value="一般"><span>一般</span></label>
+            <label class="option-label"><input type="radio" name="q18" value="不太满意"><span>不太满意</span></label>
+            <label class="option-label"><input type="radio" name="q18" value="非常不满意"><span>非常不满意</span></label>
+          </div>
+        </div>
+
+        <div class="question">
+          <span class="q-label"><span class="q-num">19</span>您对学校传统文化宣传力度是否满意？<span class="required">*</span></span>
+          <div class="options" data-q="q19">
+            <label class="option-label"><input type="radio" name="q19" value="非常满意"><span>非常满意</span></label>
+            <label class="option-label"><input type="radio" name="q19" value="比较满意"><span>比较满意</span></label>
+            <label class="option-label"><input type="radio" name="q19" value="一般"><span>一般</span></label>
+            <label class="option-label"><input type="radio" name="q19" value="不太满意"><span>不太满意</span></label>
+            <label class="option-label"><input type="radio" name="q19" value="非常不满意"><span>非常不满意</span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ 第六部分 ============ -->
+      <div class="section" id="section6">
+        <div class="section-title">第六部分：需求与建议</div>
+
+        <div class="question">
+          <span class="q-label"><span class="q-num">20</span>您希望学校举办哪些形式的传统文化活动？（可多选）<span class="required">*</span></span>
+          <div class="options" data-q="q20">
+            <label class="option-label"><input type="checkbox" name="q20" value="体验类"><span>体验类（DIY、汉服体验等）</span></label>
+            <label class="option-label"><input type="checkbox" name="q20" value="实践类"><span>实践类（文化考察、游学等）</span></label>
+            <label class="option-label"><input type="checkbox" name="q20" value="竞赛类"><span>竞赛类（书法、诗词比赛等）</span></label>
+            <label class="option-label"><input type="checkbox" name="q20" value="讲座类"><span>讲座/展览类</span></label>
+            <label class="option-label"><input type="checkbox" name="q20" value="线上类"><span>线上课程/短视频</span></label>
+            <label class="option-label"><input type="checkbox" name="q20" value="展示类"><span>成果展示/展演</span></label>
+            <label class="option-label"><input type="checkbox" name="q20" value="演出类"><span>演出/音乐会</span></label>
+          </div>
+        </div>
+
+        <div class="question">
+          <span class="q-label"><span class="q-num">21</span>您认为影响您参与传统文化活动的主要因素有哪些？（可多选）<span class="required">*</span></span>
+          <div class="options" data-q="q21">
+            <label class="option-label"><input type="checkbox" name="q21" value="学业忙碌"><span>学业忙碌，没有时间</span></label>
+            <label class="option-label"><input type="checkbox" name="q21" value="形式单一"><span>活动形式单一，缺乏吸引力</span></label>
+            <label class="option-label"><input type="checkbox" name="q21" value="宣传不足"><span>宣传不足，不知道有活动</span></label>
+            <label class="option-label"><input type="checkbox" name="q21" value="距离远"><span>场地太远，不感兴趣</span></label>
+            <label class="option-label"><input type="checkbox" name="q21" value="缺少同伴"><span>缺少一起参加的同伴</span></label>
+            <label class="option-label"><input type="checkbox" name="q21" value="门槛高"><span>门槛较高，需要一定基础/费用</span></label>
+            <label class="option-label"><input type="checkbox" name="q21" value="不实用"><span>觉得不实用，对学业就业帮助不大</span></label>
+            <label class="option-label"><input type="checkbox" name="q21" value="其他"><span>其他</span></label>
+          </div>
+        </div>
+
+        <div class="question">
+          <span class="q-label"><span class="q-num">22</span>您是否愿意参加学校组织的传统文化相关活动？<span class="required">*</span></span>
+          <div class="options" data-q="q22">
+            <label class="option-label"><input type="radio" name="q22" value="非常愿意"><span>非常愿意</span></label>
+            <label class="option-label"><input type="radio" name="q22" value="比较愿意"><span>比较愿意</span></label>
+            <label class="option-label"><input type="radio" name="q22" value="看活动内容"><span>看活动内容决定</span></label>
+            <label class="option-label"><input type="radio" name="q22" value="不太愿意"><span>不太愿意</span></label>
+            <label class="option-label"><input type="radio" name="q22" value="完全不愿"><span>完全不愿</span></label>
+          </div>
+        </div>
+
+        <div class="question">
+          <span class="q-label"><span class="q-num">23</span>您对学校传统文化建设还有什么建议或想法？（选填）</span>
+          <textarea name="q23" placeholder="请在此输入您的建议……"></textarea>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" id="prevBtn" onclick="prevSection()">上一部分</button>
+        <button type="button" class="btn btn-primary" id="nextBtn" onclick="nextSection()">下一部分</button>
+        <button type="submit" class="btn btn-success hidden" id="submitBtn">提交问卷</button>
+      </div>
+    </form>
+
+    <div class="thank-you hidden" id="thankYou">
+      <div class="icon">🎉</div>
+      <h2>感谢您完成问卷！</h2>
+      <p>您的回答已成功提交，感谢您为中华优秀传统文化传承研究做出的贡献！</p>
+      <p style="margin-top:8px;font-size:.85em;color:#999">青岛科技大学 · 信息科学技术学院</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const sections = ['section1','section2','section3','section4','section5','section6'];
+const requiredQs = ['q1','q2','q3','q4','q7','q8','q9','q10','q11','q12','q15','q16','q17','q18','q19','q20','q21','q22'];
+let currentSection = 0;
+
+function updateProgress() {
+  document.getElementById('progressFill').style.width = ((currentSection + 1) / sections.length * 100) + '%';
+  document.getElementById('currentStep').textContent = currentSection + 1;
+  document.getElementById('totalSteps').textContent = sections.length;
+  document.getElementById('prevBtn').disabled = currentSection === 0;
+  const isLast = currentSection === sections.length - 1;
+  document.getElementById('nextBtn').classList.toggle('hidden', isLast);
+  document.getElementById('submitBtn').classList.toggle('hidden', !isLast);
+}
+
+function showSection(idx) {
+  sections.forEach((id, i) => {
+    document.getElementById(id).style.display = i === idx ? 'block' : 'none';
+  });
+  currentSection = idx;
+  updateProgress();
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function nextSection() {
+  if (currentSection < sections.length - 1) {
+    showSection(currentSection + 1);
+  }
+}
+
+function prevSection() {
+  if (currentSection > 0) {
+    showSection(currentSection - 1);
+  }
+}
+
+function saveToLocal() {
+  const data = {};
+  document.querySelectorAll('[data-q]').forEach(el => {
+    const name = el.dataset.q;
+    const inputs = el.querySelectorAll('input');
+    if (inputs.length && inputs[0].type === 'radio') {
+      const checked = el.querySelector('input:checked');
+      if (checked) data[name] = checked.value;
+    } else if (inputs.length && inputs[0].type === 'checkbox') {
+      const checked = el.querySelectorAll('input:checked');
+      if (checked.length) data[name] = Array.from(checked).map(c => c.value);
+      else data[name] = [];
+    }
+  });
+  const q23 = document.querySelector('textarea[name="q23"]');
+  if (q23 && q23.value.trim()) data.q23 = q23.value.trim();
+  data.submittedAt = new Date().toISOString();
+  return data;
+}
+
+document.getElementById('surveyForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const data = saveToLocal();
+
+  let allFilled = true;
+  for (const q of requiredQs) {
+    if (!data[q] || (Array.isArray(data[q]) && data[q].length === 0)) {
+      allFilled = false;
+      const el = document.querySelector(`[data-q="${q}"]`);
+      if (el) {
+        el.style.border = '2px solid #c41e3a';
+        el.style.borderRadius = '8px';
+        el.style.padding = '8px';
+        setTimeout(() => {
+          el.style.border = '';
+          el.style.padding = '';
+        }, 2000);
+      }
+    }
+  }
+
+  if (!allFilled) {
+    alert('请完成所有带 * 的必答题后再提交！');
+    return;
+  }
+
+  const existing = JSON.parse(localStorage.getItem('survey_responses') || '[]');
+  data.id = Date.now();
+  existing.push(data);
+  localStorage.setItem('survey_responses', JSON.stringify(existing));
+
+  document.getElementById('surveyForm').classList.add('hidden');
+  document.getElementById('thankYou').classList.remove('hidden');
+});
+
+showSection(0);
+</script>
+</body>
+</html>
