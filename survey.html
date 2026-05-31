@@ -462,6 +462,7 @@ textarea:focus { outline: none; border-color: #c41e3a; }
       <div class="icon">🎉</div>
       <h2>感谢您完成问卷！</h2>
       <p>您的回答已成功提交，感谢您为中华优秀传统文化传承研究做出的贡献！</p>
+      <p id="dashLink" style="margin-top:12px;font-size:.85em;display:none">📊 <a href="dashboard.html" target="_blank" style="color:#c41e3a">查看数据统计后台</a></p>
       <p style="margin-top:8px;font-size:.85em;color:#999">青岛科技大学 · 信息科学技术学院</p>
     </div>
   </div>
@@ -551,11 +552,15 @@ document.getElementById('surveyForm').addEventListener('submit', function(e) {
 
   const existing = JSON.parse(localStorage.getItem('survey_responses') || '[]');
   data.id = Date.now();
+  data.submittedAt = new Date().toISOString();
   existing.push(data);
   localStorage.setItem('survey_responses', JSON.stringify(existing));
 
+  try { new BroadcastChannel('survey_sync').postMessage('data_updated'); } catch(e) {}
+
   document.getElementById('surveyForm').classList.add('hidden');
   document.getElementById('thankYou').classList.remove('hidden');
+  document.getElementById('dashLink').style.display = 'block';
 });
 
 showSection(0);

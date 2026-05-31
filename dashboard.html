@@ -336,7 +336,10 @@ tr:hover td { background: #fff5f5; }
         <button class="btn btn-primary" onclick="openAddModal()">+ 新增记录</button>
       </div>
       <div class="table-controls">
-        <input class="search-input" id="searchInput" placeholder="搜索内容…" oninput="renderTable()">
+        <div style="display:flex;gap:8px">
+          <input class="search-input" id="searchInput" placeholder="搜索内容…" oninput="renderTable()">
+          <button class="btn btn-info" onclick="refreshData()" title="从本地存储重新加载数据">刷新</button>
+        </div>
         <span style="font-size:.8em;color:#888" id="recordCount"></span>
       </div>
       <div class="table-wrap">
@@ -433,6 +436,9 @@ let currentTab = 'stats';
 let currentPage = 1;
 const PAGE_SIZE = 20;
 let editId = null;
+let sortField = '';
+let sortDir = 'asc';
+const DISPLAY_QS = ['q1','q2','q3','q4','q8','q11','q12','q22'];
 
 function weightedPick(options, weights) {
   const keys = Object.keys(options);
@@ -485,6 +491,81 @@ function getData() {
 
 function saveData() {
   localStorage.setItem('survey_responses', JSON.stringify(data));
+}
+
+function syncFromStorage() {
+  const stored = getData();
+  if (stored.length > 0 && stored.length !== data.length) {
+    data = stored;
+    return true;
+  }
+  return false;
+}
+
+function refreshData() {
+  if (syncFromStorage()) {
+    saveData();
+    refreshAll();
+    return true;
+  }
+  return false;
+}
+
+// Auto-sync: listen for storage changes from other tabs
+window.addEventListener('storage', function(e) {
+  if (e.key === 'survey_responses') {
+    refreshData();
+  }
+});
+
+// Also poll for file:// protocol where storage events don't fire
+let lastLen = 0;
+setInterval(function() {
+  const cur = getData();
+  if (cur.length !== lastLen) {
+    lastLen = cur.length;
+    if (cur.length !== data.length) {
+      data = cur;
+      refreshAll();
+    }
+  }
+}, 2000);
+
+// BroadcastChannel for cross-tab sync on same origin
+try {
+  const bc = new BroadcastChannel('survey_sync');
+  bc.onmessage = function(e) {
+    if (e.data === 'data_updated') refreshData();
+  };
+  // Notify other tabs when data changes
+  const origSave = saveData;
+  saveData = function() {
+    localStorage.setItem('survey_responses', JSON.stringify(data));
+    try { bc.postMessage('data_updated'); } catch(e) {}
+  };
+} catch(e) {}
+
+function sortData(arr, field, dir) {
+  return [...arr].sort((a, b) => {
+    let va = a[field], vb = b[field];
+    if (Array.isArray(va)) va = va.join('; ');
+    if (Array.isArray(vb)) vb = vb.join('; ');
+    va = (va || '').toString();
+    vb = (vb || '').toString();
+    const cmp = va.localeCompare(vb, 'zh-CN');
+    return dir === 'asc' ? cmp : -cmp;
+  });
+}
+
+function toggleSort(field) {
+  if (sortField === field) {
+    sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+  } else {
+    sortField = field;
+    sortDir = 'asc';
+  }
+  currentPage = 1;
+  renderTable();
 }
 
 function refreshAll() {
@@ -569,15 +650,27 @@ function renderTable() {
   }
   document.getElementById('recordCount').textContent = `共 ${filtered.length} 条`;
 
+  if (sortField) {
+    filtered = sortData(filtered, sortField, sortDir);
+  }
+
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
   if (currentPage > totalPages) currentPage = 1;
   const start = (currentPage - 1) * PAGE_SIZE;
   const page = filtered.slice(start, start + PAGE_SIZE);
 
-  const DISPLAY_QS = ['q1','q2','q3','q4','q8','q11','q12','q22'];
-  let thead = '<tr><th>ID</th>';
-  DISPLAY_QS.forEach(q => { thead += `<th>${Q_LABELS[q]}</th>`; });
-  thead += '<th>提交时间</th><th>操作</th></tr>';
+  let thead = '<tr>';
+  const allCols = [{key:'id',label:'ID'}, ...DISPLAY_QS.map(q => ({key:q,label:Q_LABELS[q]})), {key:'submittedAt',label:'提交时间'}, {key:'_ops',label:'操作'}];
+  allCols.forEach(col => {
+    if (col.key === '_ops') {
+      thead += `<th style="text-align:right">${col.label}</th>`;
+    } else {
+      const active = sortField === col.key;
+      const arrow = active ? (sortDir === 'asc' ? ' ▲' : ' ▼') : '';
+      thead += `<th onclick="toggleSort('${col.key}')" style="cursor:pointer;user-select:none">${col.label}${arrow}</th>`;
+    }
+  });
+  thead += '</tr>';
   document.getElementById('tableHead').innerHTML = thead;
 
   let tbody = '';
@@ -589,12 +682,11 @@ function renderTable() {
       row += `<td title="${(val||'').replace(/"/g,'&quot;')}">${val||'-'}</td>`;
     });
     row += `<td>${r.submittedAt ? new Date(r.submittedAt).toLocaleDateString() : '-'}</td>`;
-    row += `<td><button class="btn btn-sm btn-warning" onclick="openEditModal(${r.id})">编辑</button> <button class="btn btn-sm btn-danger" onclick="deleteRecord(${r.id})">删除</button></td>`;
+    row += `<td style="text-align:right"><button class="btn btn-sm btn-warning" onclick="openEditModal(${r.id})">编辑</button> <button class="btn btn-sm btn-danger" onclick="deleteRecord(${r.id})">删除</button></td>`;
     tbody += `<tr>${row}</tr>`;
   });
   document.getElementById('tableBody').innerHTML = tbody;
 
-  // Pagination
   let pagi = `<button ${currentPage<=1?'disabled':''} onclick="goPage(${currentPage-1})">‹</button>`;
   for (let i = Math.max(1, currentPage-2); i <= Math.min(totalPages, currentPage+2); i++) {
     pagi += `<button class="${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
